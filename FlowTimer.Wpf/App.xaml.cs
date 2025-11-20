@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using FlowTimer.Infrastructure.Extensions;
 using FlowTimer.Wpf.Extensions;
 using FlowTimer.Wpf.Views;
 using Microsoft.Extensions.DependencyInjection;
@@ -9,9 +10,10 @@ namespace FlowTimer.Wpf
     public partial class App
     {
         private static readonly IHost Host = Microsoft.Extensions.Hosting.Host.CreateDefaultBuilder()
-            .ConfigureServices((_, services) =>
+            .ConfigureServices((context, services) =>
             {
                 services.AddWpf();
+                services.AddInfrastructure(context.Configuration);
             }).Build();
 
         [STAThread]

@@ -24,10 +24,15 @@
 
     <ItemGroup>
       <ProjectReference Include="..\FlowTimer.Application\FlowTimer.Application.csproj" />
+      <ProjectReference Include="..\FlowTimer.Infrastructure\FlowTimer.Infrastructure.csproj" />
     </ItemGroup>
 
     <ItemGroup>
       <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.0">
+        <PrivateAssets>all</PrivateAssets>
+        <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      </PackageReference>
       <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.0" />
       <PackageReference Include="Microsoft.Extensions.Hosting" Version="10.0.0" />
     </ItemGroup>
