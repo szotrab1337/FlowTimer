@@ -43,6 +43,27 @@
             </StackPanel>
         </Button>
 
+        <TextBlock
+            Grid.Row="0"
+            Grid.RowSpan="2"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            Foreground="{DynamicResource TextOnAccentFillColorDisabledBrush}"
+            Text="Dodaj pierwszy projekt!">
+            <TextBlock.Style>
+                <Style TargetType="TextBlock">
+                    <Setter Property="Visibility" Value="Collapsed" />
+                    <Style.Triggers>
+                        <DataTrigger
+                            Binding="{Binding Projects.Count}"
+                            Value="0">
+                            <Setter Property="Visibility" Value="Visible" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </TextBlock.Style>
+        </TextBlock>
+
         <ListView
             Grid.Row="1"
             Margin="0,15,0,0"

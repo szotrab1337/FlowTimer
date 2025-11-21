@@ -21,6 +21,7 @@ namespace FlowTimer.Wpf
         [STAThread]
         public static void Main()
         {
+            Host.ApplyMigrations();
             Host.Start();
 
             var app = new App();
