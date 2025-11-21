@@ -110,7 +110,7 @@
                         Margin="16,0,0,0"
                         VerticalAlignment="Center"
                         AutomationProperties.HeadingLevel="Level1"
-                        Style="{StaticResource CaptionTextBlockStyle}"
+                        Style="{DynamicResource CaptionTextBlockStyle}"
                         Text="Flow Timer" />
                 </StackPanel>
 
@@ -121,7 +121,7 @@
                     Style="{StaticResource TitleBarDefaultButtonStyle}">
                     <TextBlock
                         VerticalAlignment="Center"
-                        FontFamily="{StaticResource SymbolThemeFontFamily}"
+                        FontFamily="{DynamicResource SymbolThemeFontFamily}"
                         FontSize="10"
                         Text="&#xE921;" />
                 </Button>
@@ -134,7 +134,7 @@
                     <TextBlock
                         x:Name="MaximizeIcon"
                         VerticalAlignment="Center"
-                        FontFamily="{StaticResource SymbolThemeFontFamily}"
+                        FontFamily="{DynamicResource SymbolThemeFontFamily}"
                         FontSize="10"
                         Text="&#xE922;" />
                 </Button>
@@ -146,7 +146,7 @@
                     Style="{StaticResource TitleBarDefaultCloseButtonStyle}">
                     <TextBlock
                         VerticalAlignment="Center"
-                        FontFamily="{StaticResource SymbolThemeFontFamily}"
+                        FontFamily="{DynamicResource SymbolThemeFontFamily}"
                         FontSize="16"
                         Text="&#xE711;" />
                 </Button>
@@ -185,7 +185,7 @@
                                         VerticalAlignment="Center"
                                         AutomationProperties.Name="{Binding Title, StringFormat='{}{0} Page'}"
                                         Focusable="False"
-                                        FontFamily="{StaticResource SymbolThemeFontFamily}"
+                                        FontFamily="{DynamicResource SymbolThemeFontFamily}"
                                         FontSize="16"
                                         Text="{Binding Icon}" />
                                     <TextBlock
@@ -208,7 +208,7 @@
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock
                                     Margin="0,4,0,0"
-                                    FontFamily="{StaticResource SymbolThemeFontFamily}">
+                                    FontFamily="{DynamicResource SymbolThemeFontFamily}">
                                     &#xE713;
                                 </TextBlock>
                                 <TextBlock

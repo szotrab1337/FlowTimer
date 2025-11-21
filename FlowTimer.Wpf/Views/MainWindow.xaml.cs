@@ -49,7 +49,7 @@ namespace FlowTimer.Wpf.Views
 
         private void CloseWindow(object sender, RoutedEventArgs e)
         {
-            Application.Current.Shutdown();
+            System.Windows.Application.Current.Shutdown();
         }
 
         private void MaximizeWindow(object sender, RoutedEventArgs e)

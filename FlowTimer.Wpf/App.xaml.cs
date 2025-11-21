@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using FlowTimer.Application.Extensions;
 using FlowTimer.Infrastructure.Extensions;
 using FlowTimer.Wpf.Extensions;
 using FlowTimer.Wpf.Views;
@@ -13,6 +14,7 @@ namespace FlowTimer.Wpf
             .ConfigureServices((context, services) =>
             {
                 services.AddWpf();
+                services.AddApplication();
                 services.AddInfrastructure(context.Configuration);
             }).Build();
 
@@ -20,7 +22,7 @@ namespace FlowTimer.Wpf
         public static void Main()
         {
             Host.Start();
-            
+
             var app = new App();
             app.InitializeComponent();
             app.MainWindow = Host.Services.GetRequiredService<MainWindow>();
