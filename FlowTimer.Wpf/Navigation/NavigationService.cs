@@ -6,7 +6,13 @@ namespace FlowTimer.Wpf.Navigation
     public interface INavigationService
     {
         void Navigate(Type type);
+        void Navigate(Type type, object parameter);
         void SetFrame(Frame frame);
+    }
+
+    public interface INavigable
+    {
+        void OnNavigatedTo(object parameter);
     }
 
     public class NavigationService(IServiceProvider serviceProvider) : INavigationService
@@ -17,6 +23,18 @@ namespace FlowTimer.Wpf.Navigation
         public void Navigate(Type type)
         {
             var page = _serviceProvider.GetRequiredService(type);
+
+            _frame?.Navigate(page);
+        }
+
+        public void Navigate(Type type, object parameter)
+        {
+            var page = serviceProvider.GetRequiredService(type);
+
+            if (page is INavigable navigable)
+            {
+                navigable.OnNavigatedTo(parameter);
+            }
 
             _frame?.Navigate(page);
         }

@@ -3,7 +3,7 @@ using FlowTimer.Domain.Entities;
 
 namespace FlowTimer.Wpf.ViewModels.Items
 {
-    public partial class ProjectViewModel : ObservableObject
+    public partial class ProjectItemViewModel : ObservableObject
     {
         [ObservableProperty]
         private DateTime _createdOn;
@@ -29,7 +29,7 @@ namespace FlowTimer.Wpf.ViewModels.Items
         [ObservableProperty]
         private string _totalTime;
 
-        public ProjectViewModel(Project project)
+        public ProjectItemViewModel(Project project)
         {
             Id = project.Id;
             Name = project.Name;

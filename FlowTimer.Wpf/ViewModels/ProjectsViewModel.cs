@@ -2,26 +2,31 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using FlowTimer.Application.Interfaces;
+using FlowTimer.Wpf.Navigation;
 using FlowTimer.Wpf.ViewModels.Items;
+using FlowTimer.Wpf.Views;
 
 namespace FlowTimer.Wpf.ViewModels
 {
-    public partial class ProjectsViewModel(IProjectService projectService) : ObservableObject
+    public partial class ProjectsViewModel(
+        IProjectService projectService,
+        INavigationService navigationService) : ObservableObject
     {
         private readonly IProjectService _projectService = projectService;
+        private readonly INavigationService _navigationService = navigationService;
 
         [ObservableProperty]
-        private ObservableCollection<ProjectViewModel> _projects = [];
+        private ObservableCollection<ProjectItemViewModel> _projects = [];
 
         [ObservableProperty]
-        private ProjectViewModel? _selectedProject;
+        private ProjectItemViewModel? _selectedProject;
 
         public async Task Initialize()
         {
             var projects = await _projectService.GetAll();
-            var vms = projects.Select(x => new ProjectViewModel(x));
+            var vms = projects.Select(x => new ProjectItemViewModel(x));
 
-            Projects = new ObservableCollection<ProjectViewModel>(vms);
+            Projects = new ObservableCollection<ProjectItemViewModel>(vms);
         }
 
         [RelayCommand]
@@ -30,17 +35,23 @@ namespace FlowTimer.Wpf.ViewModels
         }
 
         [RelayCommand]
-        private void ArchiveProject(ProjectViewModel vm)
+        private void ArchiveProject(ProjectItemViewModel vm)
         {
         }
 
         [RelayCommand]
-        private void EditProject(ProjectViewModel vm)
+        private void EditProject(ProjectItemViewModel vm)
         {
         }
 
-        partial void OnSelectedProjectChanged(ProjectViewModel? value)
+        partial void OnSelectedProjectChanged(ProjectItemViewModel? value)
         {
+            if (value is null)
+            {
+                return;
+            }
+
+            _navigationService.Navigate(typeof(ProjectPage), value.Id);
         }
     }
 }

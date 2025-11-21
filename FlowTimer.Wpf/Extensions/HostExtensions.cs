@@ -14,7 +14,11 @@ namespace FlowTimer.Wpf.Extensions
                 using var scope = host.Services.CreateScope();
                 var factory = scope.ServiceProvider.GetRequiredService<IDbContextFactory<FlowTimerDbContext>>();
                 using var context = factory.CreateDbContext();
-                context.Database.Migrate();
+
+                if (context.Database.GetPendingMigrations().Any())
+                {
+                    context.Database.Migrate();
+                }
             }
         }
     }
