@@ -14,11 +14,13 @@ namespace FlowTimer.Wpf.ViewModels
         IProjectService projectService,
         ILogger<ProjectDashboardViewModel> logger,
         INavigationService navigationService,
-        IWorkItemService workItemService) : ObservableObject
+        IWorkItemService workItemService,
+        ISessionTimerService sessionTimerService) : ObservableObject
     {
         private readonly ILogger<ProjectDashboardViewModel> _logger = logger;
         private readonly INavigationService _navigationService = navigationService;
         private readonly IProjectService _projectService = projectService;
+        private readonly ISessionTimerService _sessionTimerService = sessionTimerService;
         private readonly IWorkItemService _workItemService = workItemService;
 
         [ObservableProperty]
@@ -32,6 +34,10 @@ namespace FlowTimer.Wpf.ViewModels
         public void Cleanup()
         {
             _workItemService.WorkItemArchived -= OnWorkItemArchived;
+
+            _sessionTimerService.Tick -= OnSessionTimerTick;
+            _sessionTimerService.SessionStarted -= OnSessionStarted;
+            _sessionTimerService.SessionStopped -= OnSessionStopped;
         }
 
         public async Task Initialize(int projectId)
@@ -41,7 +47,17 @@ namespace FlowTimer.Wpf.ViewModels
             await LoadProjectInfo();
             await LoadWorkItems();
 
+            if (_sessionTimerService.IsRunning)
+            {
+                var workItem = WorkItems.FirstOrDefault(x => x.Id == _sessionTimerService.ActiveWorkItemId);
+                workItem?.IsSessionActive = true;
+            }
+
             _workItemService.WorkItemArchived += OnWorkItemArchived;
+
+            _sessionTimerService.Tick += OnSessionTimerTick;
+            _sessionTimerService.SessionStarted += OnSessionStarted;
+            _sessionTimerService.SessionStopped += OnSessionStopped;
         }
 
         [RelayCommand]
@@ -111,6 +127,28 @@ namespace FlowTimer.Wpf.ViewModels
             });
         }
 
+        private void OnSessionStarted(object? sender, SessionStartedEventArgs e)
+        {
+            var workItem = WorkItems.FirstOrDefault(x => x.Id == e.WorkItemId);
+            workItem?.IsSessionActive = true;
+        }
+
+        private void OnSessionStopped(object? sender, SessionStoppedEventArgs e)
+        {
+            var workItem = WorkItems.FirstOrDefault(x => x.Id == e.WorkItemId);
+            workItem?.IsSessionActive = false;
+            workItem?.AddSessionTime(e.Duration);
+        }
+
+        private void OnSessionTimerTick(object? sender, SessionTimerTickEventArgs e)
+        {
+            System.Windows.Application.Current.Dispatcher.Invoke(() =>
+            {
+                var workItem = WorkItems.FirstOrDefault(x => x.Id == e.WorkItemId);
+                workItem?.UpdateTime(e.Elapsed);
+            });
+        }
+
         private void OnWorkItemArchived(object? sender, int e)
         {
             var workItem = WorkItems.FirstOrDefault(x => x.Id == e);
@@ -127,6 +165,11 @@ namespace FlowTimer.Wpf.ViewModels
             try
             {
                 await _workItemService.Edit(vm.Id, vm.Name, vm.Description, vm.IsCompleted);
+
+                if (_sessionTimerService.ActiveWorkItemId == vm.Id)
+                {
+                    await _sessionTimerService.Stop();
+                }
             }
             catch (Exception ex)
             {
@@ -135,8 +178,16 @@ namespace FlowTimer.Wpf.ViewModels
         }
 
         [RelayCommand]
-        private void ToggleTimer(WorkItemViewModel vm)
+        private async Task ToggleTimer(WorkItemViewModel vm)
         {
+            if (_sessionTimerService.ActiveWorkItemId == vm.Id)
+            {
+                await _sessionTimerService.Stop();
+            }
+            else
+            {
+                await _sessionTimerService.Start(_projectId, vm.Id);
+            }
         }
     }
 }

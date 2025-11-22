@@ -14,6 +14,6 @@
 
         public WorkItem WorkItem { get; set; } = default!;
         
-        public TimeSpan Duration => (EndTime ?? DateTime.UtcNow) - StartTime;
+        public TimeSpan Duration => (EndTime ?? DateTime.Now) - StartTime;
     }
 }

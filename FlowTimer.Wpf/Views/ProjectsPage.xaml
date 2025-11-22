@@ -76,6 +76,15 @@
                     BasedOn="{StaticResource {x:Type ListViewItem}}"
                     TargetType="ListViewItem">
                     <Setter Property="Background" Value="{DynamicResource CardBackgroundFillColorDefaultBrush}" />
+                    <Setter Property="Margin" Value="0,0,0,8" />
+                    <Style.Triggers>
+                        <DataTrigger
+                            Binding="{Binding IsSessionActive}"
+                            Value="{StaticResource True}">
+                            <Setter Property="BorderBrush" Value="{DynamicResource SystemFillColorAttentionBrush}" />
+                            <Setter Property="BorderThickness" Value="2" />
+                        </DataTrigger>
+                    </Style.Triggers>
                 </Style>
             </ListView.ItemContainerStyle>
             <ListView.ItemTemplate>

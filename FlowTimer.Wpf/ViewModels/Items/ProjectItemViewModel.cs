@@ -5,6 +5,8 @@ namespace FlowTimer.Wpf.ViewModels.Items
 {
     public partial class ProjectItemViewModel : ObservableObject
     {
+        private long _baseTicks;
+
         [ObservableProperty]
         private DateTime _createdOn;
 
@@ -13,6 +15,9 @@ namespace FlowTimer.Wpf.ViewModels.Items
 
         [ObservableProperty]
         private int _id;
+
+        [ObservableProperty]
+        private bool _isSessionActive;
 
         [ObservableProperty]
         private DateTime _modifiedOn;
@@ -31,9 +36,21 @@ namespace FlowTimer.Wpf.ViewModels.Items
             LoadValues(project);
         }
 
+        public void AddSessionTime(TimeSpan duration)
+        {
+            _baseTicks += duration.Ticks;
+            UpdateTime(TimeSpan.Zero);
+        }
+
         public void Update(Project project)
         {
             LoadValues(project);
+        }
+
+        public void UpdateTime(TimeSpan elapsed)
+        {
+            var total = TimeSpan.FromTicks(_baseTicks) + elapsed;
+            TotalTime = $"{(int)total.TotalHours:00}:{total.Minutes:00}:{total.Seconds:00}";
         }
 
         private void LoadValues(Project project)
@@ -50,6 +67,8 @@ namespace FlowTimer.Wpf.ViewModels.Items
 
             var duration = TimeSpan.FromTicks(project.WorkItems.Sum(x => x.Duration.Ticks));
             TotalTime = $"{(int)duration.TotalHours:00}:{duration.Minutes:00}:{duration.Seconds:00}";
+            
+            _baseTicks = duration.Ticks;
         }
     }
 }

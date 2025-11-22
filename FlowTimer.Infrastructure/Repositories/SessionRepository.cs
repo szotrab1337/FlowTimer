@@ -66,5 +66,19 @@ namespace FlowTimer.Infrastructure.Repositories
 
             return result > 0;
         }
+
+        public async Task<bool> UpdateEndTime(int id, DateTime endTime)
+        {
+            await using var context = CreateContext();
+
+            var result = await context.Sessions
+                .Where(x => x.Id == id)
+                .ExecuteUpdateAsync(x => x
+                    .SetProperty(z => z.EndTime, endTime)
+                    .SetProperty(z => z.ModifiedOn, DateTime.Now)
+                );
+
+            return result > 0;
+        }
     }
 }

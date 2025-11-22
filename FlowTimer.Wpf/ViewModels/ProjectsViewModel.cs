@@ -13,11 +13,13 @@ namespace FlowTimer.Wpf.ViewModels
     public partial class ProjectsViewModel(
         IProjectService projectService,
         INavigationService navigationService,
-        ILogger<ProjectsViewModel> logger) : ObservableObject
+        ILogger<ProjectsViewModel> logger,
+        ISessionTimerService sessionTimerService) : ObservableObject
     {
         private readonly ILogger<ProjectsViewModel> _logger = logger;
         private readonly INavigationService _navigationService = navigationService;
         private readonly IProjectService _projectService = projectService;
+        private readonly ISessionTimerService _sessionTimerService = sessionTimerService;
 
         [ObservableProperty]
         private ObservableCollection<ProjectItemViewModel> _projects = [];
@@ -28,6 +30,7 @@ namespace FlowTimer.Wpf.ViewModels
         public void Cleanup()
         {
             _projectService.ProjectArchived -= OnProjectArchived;
+            _sessionTimerService.Tick -= OnSessionTimerTick;
         }
 
         public async Task Initialize()
@@ -40,7 +43,11 @@ namespace FlowTimer.Wpf.ViewModels
                 Projects = new ObservableCollection<ProjectItemViewModel>(vms);
             });
 
+            var project = Projects.FirstOrDefault(x => x.Id == _sessionTimerService.ActiveProjectId);
+            project?.IsSessionActive = true;
+            
             _projectService.ProjectArchived += OnProjectArchived;
+            _sessionTimerService.Tick += OnSessionTimerTick;
         }
 
         [RelayCommand]
@@ -95,6 +102,15 @@ namespace FlowTimer.Wpf.ViewModels
             }
 
             _navigationService.Navigate(typeof(ProjectDashboardPage), value.Id);
+        }
+
+        private void OnSessionTimerTick(object? sender, SessionTimerTickEventArgs e)
+        {
+            System.Windows.Application.Current.Dispatcher.Invoke(() =>
+            {
+                var project = Projects.FirstOrDefault(x => x.Id == e.ProjectId);
+                project?.UpdateTime(e.Elapsed);
+            });
         }
     }
 }

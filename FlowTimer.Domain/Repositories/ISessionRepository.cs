@@ -9,5 +9,6 @@ namespace FlowTimer.Domain.Repositories
         Task<Session?> GetById(int id);
         Task<List<Session>> GetByWorkItemId(int workItemId);
         Task<bool> Update(Session session);
+        Task<bool> UpdateEndTime(int id, DateTime endTime);
     }
 }

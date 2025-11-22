@@ -173,6 +173,12 @@
                             Value="{StaticResource True}">
                             <Setter Property="Background" Value="{DynamicResource CardBackgroundFillColorSecondaryBrush}" />
                         </DataTrigger>
+                        <DataTrigger
+                            Binding="{Binding IsSessionActive}"
+                            Value="{StaticResource True}">
+                            <Setter Property="BorderBrush" Value="{DynamicResource SystemFillColorAttentionBrush}" />
+                            <Setter Property="BorderThickness" Value="2" />
+                        </DataTrigger>
                     </Style.Triggers>
                 </Style>
             </ListView.ItemContainerStyle>
@@ -302,7 +308,6 @@
                             Grid.Row="0"
                             Grid.RowSpan="3"
                             Grid.Column="3"
-                            Margin="0,0,8,0"
                             VerticalAlignment="Center"
                             Command="{Binding DataContext.EditWorkItemCommand, RelativeSource={RelativeSource AncestorType=ListView}}"
                             CommandParameter="{Binding}"
@@ -317,10 +322,12 @@
                             Grid.Row="0"
                             Grid.RowSpan="3"
                             Grid.Column="4"
+                            Margin="8,0,0,0"
                             VerticalAlignment="Center"
                             Command="{Binding DataContext.ArchiveWorkItemCommand, RelativeSource={RelativeSource AncestorType=ListView}}"
                             CommandParameter="{Binding}"
-                            ToolTip="Usuń">
+                            ToolTip="Usuń"
+                            Visibility="{Binding IsSessionActive, Converter={c:BoolToInverseVisibilityConverter}}">
                             <TextBlock
                                 FontFamily="{DynamicResource SymbolThemeFontFamily}"
                                 FontSize="14"
