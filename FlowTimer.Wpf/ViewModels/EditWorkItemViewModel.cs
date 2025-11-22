@@ -7,20 +7,22 @@ using Microsoft.Extensions.Logging;
 
 namespace FlowTimer.Wpf.ViewModels
 {
-    public partial class EditProjectViewModel(
-        INavigationService navigationService,
-        IProjectService projectService,
-        ILogger<EditProjectViewModel> logger) : ObservableValidator
+    public partial class EditWorkItemViewModel(
+        IWorkItemService workItemService,
+        ILogger<EditWorkItemViewModel> logger,
+        INavigationService navigationService) : ObservableValidator
     {
-        private readonly ILogger<EditProjectViewModel> _logger = logger;
+        private readonly ILogger<EditWorkItemViewModel> _logger = logger;
         private readonly INavigationService _navigationService = navigationService;
-        private readonly IProjectService _projectService = projectService;
+        private readonly IWorkItemService _workItemService = workItemService;
 
         [ObservableProperty]
         [MaxLength(256, ErrorMessage = "Opis nie może być dłuższy niż 256 znaków.")]
         [NotifyCanExecuteChangedFor(nameof(SaveCommand))]
         [NotifyDataErrorInfo]
         private string? _description;
+
+        private bool _isCompleted;
 
         [ObservableProperty]
         [Required(ErrorMessage = "To pole jest wymagane.")]
@@ -29,25 +31,18 @@ namespace FlowTimer.Wpf.ViewModels
         [NotifyDataErrorInfo]
         private string _name = string.Empty;
 
-        private int _projectId;
+        private int _workItemId;
 
-        public async Task Initialize(int projectId)
+        public async Task Initialize(int workItemId)
         {
-            try
-            {
-                _projectId = projectId;
+            _workItemId = workItemId;
 
-                var project = await _projectService.GetById(_projectId);
-
-                if (project is not null)
-                {
-                    Name = project.Name;
-                    Description = project.Description;
-                }
-            }
-            catch (Exception ex)
+            var workItem = await _workItemService.GetById(_workItemId);
+            if (workItem is not null)
             {
-                _logger.LogError(ex, "Error occurred while loading project.");
+                Name = workItem.Name;
+                Description = workItem.Description;
+                _isCompleted = workItem.IsCompleted;
             }
         }
 
@@ -73,12 +68,12 @@ namespace FlowTimer.Wpf.ViewModels
 
             try
             {
-                await _projectService.Edit(_projectId, Name, Description);
+                await _workItemService.Edit(_workItemId, Name, Description, _isCompleted);
                 _navigationService.NavigateBack();
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error occurred while editing a project.");
+                _logger.LogError(ex, "Error occurred while editing a work item.");
             }
         }
     }

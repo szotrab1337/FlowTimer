@@ -51,6 +51,8 @@ namespace FlowTimer.Infrastructure.Repositories
             return await context.WorkItems
                 .Include(x => x.Sessions.Where(y => !y.IsArchived))
                 .Where(x => x.ProjectId == projectId && !x.IsArchived)
+                .OrderBy(x => x.IsCompleted)
+                .ThenBy(x => x.Id)
                 .ToListAsync();
         }
 

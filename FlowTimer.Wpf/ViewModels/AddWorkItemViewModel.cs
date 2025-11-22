@@ -7,14 +7,14 @@ using Microsoft.Extensions.Logging;
 
 namespace FlowTimer.Wpf.ViewModels
 {
-    public partial class EditProjectViewModel(
+    public partial class AddWorkItemViewModel(
         INavigationService navigationService,
-        IProjectService projectService,
-        ILogger<EditProjectViewModel> logger) : ObservableValidator
+        IWorkItemService workItemService,
+        ILogger<AddWorkItemViewModel> logger) : ObservableValidator
     {
-        private readonly ILogger<EditProjectViewModel> _logger = logger;
+        private readonly ILogger<AddWorkItemViewModel> _logger = logger;
         private readonly INavigationService _navigationService = navigationService;
-        private readonly IProjectService _projectService = projectService;
+        private readonly IWorkItemService _workItemService = workItemService;
 
         [ObservableProperty]
         [MaxLength(256, ErrorMessage = "Opis nie może być dłuższy niż 256 znaków.")]
@@ -31,24 +31,9 @@ namespace FlowTimer.Wpf.ViewModels
 
         private int _projectId;
 
-        public async Task Initialize(int projectId)
+        public void Initialize(int projectId)
         {
-            try
-            {
-                _projectId = projectId;
-
-                var project = await _projectService.GetById(_projectId);
-
-                if (project is not null)
-                {
-                    Name = project.Name;
-                    Description = project.Description;
-                }
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error occurred while loading project.");
-            }
+            _projectId = projectId;
         }
 
         [RelayCommand]
@@ -73,12 +58,12 @@ namespace FlowTimer.Wpf.ViewModels
 
             try
             {
-                await _projectService.Edit(_projectId, Name, Description);
+                await _workItemService.Create(_projectId, Name, Description);
                 _navigationService.NavigateBack();
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error occurred while editing a project.");
+                _logger.LogError(ex, "Error occurred while creating a new work item.");
             }
         }
     }

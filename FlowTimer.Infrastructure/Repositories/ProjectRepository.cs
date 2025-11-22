@@ -40,8 +40,8 @@ namespace FlowTimer.Infrastructure.Repositories
             await using var context = CreateContext();
 
             return await context.Projects
-                .Include(x => x.WorkItems)
-                .ThenInclude(z => z.Sessions)
+                .Include(x => x.WorkItems.Where(y => !y.IsArchived))
+                .ThenInclude(z => z.Sessions.Where(y => !y.IsArchived))
                 .Where(x => !x.IsArchived)
                 .ToListAsync();
         }

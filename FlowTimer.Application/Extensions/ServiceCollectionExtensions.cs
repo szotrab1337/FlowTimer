@@ -11,6 +11,7 @@ namespace FlowTimer.Application.Extensions
             public void AddApplication()
             {
                 services.AddScoped<IProjectService, ProjectService>();
+                services.AddScoped<IWorkItemService, WorkItemService>();
             }
         }
     }

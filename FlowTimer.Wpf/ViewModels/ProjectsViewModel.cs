@@ -3,7 +3,6 @@ using System.Windows;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using FlowTimer.Application.Interfaces;
-using FlowTimer.Domain.Entities;
 using FlowTimer.Wpf.Navigation;
 using FlowTimer.Wpf.ViewModels.Items;
 using FlowTimer.Wpf.Views;
@@ -28,7 +27,7 @@ namespace FlowTimer.Wpf.ViewModels
 
         public void Cleanup()
         {
-            _projectService.ProjectCreated -= OnProjectCreated;
+            _projectService.ProjectArchived -= OnProjectArchived;
         }
 
         public async Task Initialize()
@@ -41,19 +40,7 @@ namespace FlowTimer.Wpf.ViewModels
                 Projects = new ObservableCollection<ProjectItemViewModel>(vms);
             });
 
-            _projectService.ProjectCreated += OnProjectCreated;
             _projectService.ProjectArchived += OnProjectArchived;
-            _projectService.ProjectEdited += OnProjectEdited;
-        }
-
-        private void OnProjectEdited(object? sender, Project e)
-        {
-            var project = Projects.FirstOrDefault(x => x.Id == e.Id);
-
-            if (project is not null)
-            {
-                project.Update(e);
-            }
         }
 
         [RelayCommand]
@@ -68,7 +55,7 @@ namespace FlowTimer.Wpf.ViewModels
             try
             {
                 var result = MessageBox.Show(
-                    "Czy na pewno chcesz zarchiwizować ten projekt?",
+                    $"Czy na pewno chcesz zarchiwizować projekt '{vm.Name}'?",
                     "Potwierdzenie",
                     MessageBoxButton.YesNo,
                     MessageBoxImage.Question);
@@ -98,13 +85,6 @@ namespace FlowTimer.Wpf.ViewModels
             {
                 Projects.Remove(project);
             }
-        }
-
-        private void OnProjectCreated(object? sender, Project e)
-        {
-            var vm = new ProjectItemViewModel(e);
-
-            System.Windows.Application.Current.Dispatcher.Invoke(() => { Projects.Add(vm); });
         }
 
         partial void OnSelectedProjectChanged(ProjectItemViewModel? value)

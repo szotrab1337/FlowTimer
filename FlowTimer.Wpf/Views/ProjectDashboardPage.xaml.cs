@@ -1,4 +1,5 @@
-﻿using FlowTimer.Wpf.Navigation;
+﻿using System.Windows;
+using FlowTimer.Wpf.Navigation;
 using FlowTimer.Wpf.ViewModels;
 
 namespace FlowTimer.Wpf.Views
@@ -23,6 +24,11 @@ namespace FlowTimer.Wpf.Views
             }
 
             await _viewModel.Initialize(projectId);
+        }
+
+        private void Page_OnUnloaded(object sender, RoutedEventArgs e)
+        {
+            _viewModel.Cleanup();
         }
     }
 }
