@@ -43,6 +43,8 @@ namespace FlowTimer.Infrastructure.Persistence
                 workItem.HasMany(x => x.Sessions)
                     .WithOne(z => z.WorkItem)
                     .HasForeignKey(x => x.WorkItemId);
+                
+                workItem.Ignore(x => x.Duration);
             });
 
             builder.Entity<Session>(session =>

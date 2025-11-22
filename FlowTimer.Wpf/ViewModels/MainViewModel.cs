@@ -1,8 +1,8 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using FlowTimer.Wpf.Models;
 using FlowTimer.Wpf.Navigation;
 using FlowTimer.Wpf.Views;
+using MenuItem = FlowTimer.Wpf.Models.MenuItem;
 
 namespace FlowTimer.Wpf.ViewModels
 {

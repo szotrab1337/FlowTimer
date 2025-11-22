@@ -14,5 +14,7 @@
 
         public Project Project { get; set; } = default!;
         public ICollection<Session> Sessions { get; set; } = [];
+
+        public TimeSpan Duration => TimeSpan.FromTicks(Sessions.Sum(x => x.Duration.Ticks));
     }
 }

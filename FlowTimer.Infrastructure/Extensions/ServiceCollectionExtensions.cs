@@ -1,4 +1,6 @@
-﻿using FlowTimer.Infrastructure.Persistence;
+﻿using FlowTimer.Domain.Repositories;
+using FlowTimer.Infrastructure.Persistence;
+using FlowTimer.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -11,9 +13,13 @@ namespace FlowTimer.Infrastructure.Extensions
         {
             public void AddInfrastructure(IConfiguration configuration)
             {
-                services.AddDbContext<FlowTimerDbContext>(
+                services.AddDbContextFactory<FlowTimerDbContext>(
                     options => { options.UseSqlite(configuration.GetConnectionString("FlowTimerDb")); },
                     ServiceLifetime.Transient);
+
+                services.AddScoped<IProjectRepository, ProjectRepository>();
+                services.AddScoped<IWorkItemRepository, WorkItemRepository>();
+                services.AddScoped<ISessionRepository, SessionRepository>();
             }
         }
     }
