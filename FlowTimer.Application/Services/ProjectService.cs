@@ -9,7 +9,18 @@ namespace FlowTimer.Application.Services
     {
         private readonly IProjectRepository _projectRepository = projectRepository;
 
+        public event EventHandler<int>? ProjectArchived;
         public event EventHandler<Project>? ProjectCreated;
+
+        public async Task Archive(int id)
+        {
+            var result = await _projectRepository.Archive(id);
+
+            if (result)
+            {
+                ProjectArchived?.Invoke(this, id);
+            }
+        }
 
         public async Task Create(string name, string? description)
         {

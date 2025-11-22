@@ -1,4 +1,5 @@
 ﻿using System.Collections.ObjectModel;
+using System.Windows;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using FlowTimer.Application.Interfaces;
@@ -6,13 +7,16 @@ using FlowTimer.Domain.Entities;
 using FlowTimer.Wpf.Navigation;
 using FlowTimer.Wpf.ViewModels.Items;
 using FlowTimer.Wpf.Views;
+using Microsoft.Extensions.Logging;
 
 namespace FlowTimer.Wpf.ViewModels
 {
     public partial class ProjectsViewModel(
         IProjectService projectService,
-        INavigationService navigationService) : ObservableObject
+        INavigationService navigationService,
+        ILogger<ProjectsViewModel> logger) : ObservableObject
     {
+        private readonly ILogger<ProjectsViewModel> _logger = logger;
         private readonly INavigationService _navigationService = navigationService;
         private readonly IProjectService _projectService = projectService;
 
@@ -38,6 +42,7 @@ namespace FlowTimer.Wpf.ViewModels
             });
 
             _projectService.ProjectCreated += OnProjectCreated;
+            _projectService.ProjectArchived += OnProjectArchived;
         }
 
         [RelayCommand]
@@ -49,11 +54,38 @@ namespace FlowTimer.Wpf.ViewModels
         [RelayCommand]
         private void ArchiveProject(ProjectItemViewModel vm)
         {
+            try
+            {
+                var result = MessageBox.Show(
+                    "Czy na pewno chcesz zarchiwizować ten projekt?",
+                    "Potwierdzenie",
+                    MessageBoxButton.YesNo,
+                    MessageBoxImage.Question);
+
+                if (result == MessageBoxResult.Yes)
+                {
+                    _projectService.Archive(vm.Id);
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error occurred while archiving project.");
+            }
         }
 
         [RelayCommand]
         private void EditProject(ProjectItemViewModel vm)
         {
+        }
+
+        private void OnProjectArchived(object? sender, int e)
+        {
+            var project = Projects.FirstOrDefault(x => x.Id == e);
+
+            if (project is not null)
+            {
+                Projects.Remove(project);
+            }
         }
 
         private void OnProjectCreated(object? sender, Project e)

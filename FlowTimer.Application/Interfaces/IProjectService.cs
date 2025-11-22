@@ -4,8 +4,10 @@ namespace FlowTimer.Application.Interfaces
 {
     public interface IProjectService
     {
-        Task<List<Project>> GetAll();
+        event EventHandler<int>? ProjectArchived;
         event EventHandler<Project>? ProjectCreated;
+        Task Archive(int id);
         Task Create(string name, string? description);
+        Task<List<Project>> GetAll();
     }
 }
