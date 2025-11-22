@@ -11,6 +11,10 @@ namespace FlowTimer.Wpf
     public partial class App
     {
         private static readonly IHost Host = Microsoft.Extensions.Hosting.Host.CreateDefaultBuilder()
+            .ConfigureLogging((context, builder) =>
+            {
+                builder.AddLogger(context.Configuration);
+            })
             .ConfigureServices((context, services) =>
             {
                 services.AddWpf();
