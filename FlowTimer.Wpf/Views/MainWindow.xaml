@@ -14,9 +14,7 @@
     mc:Ignorable="d">
     <Window.Resources>
 
-        <Style
-            x:Key="TitleBarDefaultButtonStyle"
-            TargetType="Button">
+        <Style x:Key="TitleBarDefaultButtonStyle" TargetType="Button">
             <Setter Property="MinWidth" Value="48" />
             <Setter Property="MinHeight" Value="32" />
             <Setter Property="Background" Value="Transparent" />
@@ -206,14 +204,10 @@
                             Command="{Binding ViewModel.SettingsCommand}"
                             DockPanel.Dock="Bottom">
                             <StackPanel Orientation="Horizontal">
-                                <TextBlock
-                                    Margin="0,4,0,0"
-                                    FontFamily="{DynamicResource SymbolThemeFontFamily}">
+                                <TextBlock Margin="0,4,0,0" FontFamily="{DynamicResource SymbolThemeFontFamily}">
                                     &#xE713;
                                 </TextBlock>
-                                <TextBlock
-                                    Margin="8,0,0,0"
-                                    Text="Ustawienia" />
+                                <TextBlock Margin="8,0,0,0" Text="Ustawienia" />
                             </StackPanel>
                         </Button>
                     </DockPanel>
@@ -221,14 +215,12 @@
                 <Border
                     Grid.Column="1"
                     Margin="4,0,0,0"
-                    Padding="24,16,24,0"
+                    Padding="24,16,24,24"
                     Background="{DynamicResource LayerFillColorDefaultBrush}"
                     BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}"
                     BorderThickness="1"
                     CornerRadius="8,0,0,0">
-                    <Frame
-                        x:Name="RootContentFrame"
-                        NavigationUIVisibility="Hidden" />
+                    <Frame x:Name="RootContentFrame" NavigationUIVisibility="Hidden" />
                 </Border>
             </Grid>
         </Grid>

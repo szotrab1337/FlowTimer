@@ -4,9 +4,28 @@ using FlowTimer.Domain.Repositories;
 
 namespace FlowTimer.Application.Services
 {
-    public class ProjectService(IProjectRepository projectRepository) : IProjectService
+    public class ProjectService(
+        IProjectRepository projectRepository) : IProjectService
     {
         private readonly IProjectRepository _projectRepository = projectRepository;
+
+        public event EventHandler<Project>? ProjectCreated;
+
+        public async Task Create(string name, string? description)
+        {
+            var project = new Project
+            {
+                Name = name,
+                Description = description
+            };
+
+            var result = await _projectRepository.Add(project);
+
+            if (result)
+            {
+                ProjectCreated?.Invoke(this, project);
+            }
+        }
 
         public async Task<List<Project>> GetAll()
         {

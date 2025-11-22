@@ -12,16 +12,21 @@ namespace FlowTimer.Wpf.Extensions
             public void AddWpf()
             {
                 services.AddSingleton<INavigationService, NavigationService>();
+
                 services.AddSingleton<MainWindow>();
                 services.AddSingleton<MainViewModel>();
 
                 services.AddTransient<HomePage>();
                 services.AddTransient<SettingsPage>();
-                services.AddTransient<ProjectsPage>();
-                services.AddTransient<ProjectDashboardPage>();
 
+                services.AddTransient<ProjectsPage>();
                 services.AddTransient<ProjectsViewModel>();
+
+                services.AddTransient<ProjectDashboardPage>();
                 services.AddTransient<ProjectDashboardViewModel>();
+
+                services.AddTransient<AddProjectPage>();
+                services.AddTransient<AddProjectViewModel>();
             }
         }
     }

@@ -13,6 +13,12 @@
                 <GradientStop Offset="1" Color="#FF00F2FE" />
             </LinearGradientBrush>
 
+            <Style x:Key="GenericLabelStyle" TargetType="Label">
+                <Setter Property="Opacity" Value="0.67" />
+                <Setter Property="FontWeight" Value="SemiBold" />
+                <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
+            </Style>
+
             <DrawingImage x:Key="AppIcon">
                 <DrawingImage.Drawing>
                     <DrawingGroup>
@@ -43,9 +49,7 @@
 
                         <GeometryDrawing Brush="{StaticResource FlowGradientBrush}">
                             <GeometryDrawing.Geometry>
-                                <PathGeometry
-                                    Figures="M210 180 L 340 256 L 210 332 Z"
-                                    FillRule="Nonzero" />
+                                <PathGeometry Figures="M210 180 L 340 256 L 210 332 Z" FillRule="Nonzero" />
                             </GeometryDrawing.Geometry>
                         </GeometryDrawing>
                     </DrawingGroup>

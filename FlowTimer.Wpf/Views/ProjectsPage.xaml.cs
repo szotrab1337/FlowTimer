@@ -19,5 +19,10 @@ namespace FlowTimer.Wpf.Views
         {
             await _viewModel.Initialize();
         }
+
+        private void Page_OnUnloaded(object sender, RoutedEventArgs e)
+        {
+            _viewModel.Cleanup();
+        }
     }
 }
