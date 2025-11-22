@@ -10,5 +10,7 @@ namespace FlowTimer.Application.Interfaces
         Task Create(string name, string? description);
         Task<List<Project>> GetAll();
         Task<Project?> GetById(int id);
+        event EventHandler<Project>? ProjectEdited;
+        Task Edit(int id, string name, string? description);
     }
 }

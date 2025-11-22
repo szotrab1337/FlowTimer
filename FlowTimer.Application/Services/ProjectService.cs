@@ -11,6 +11,7 @@ namespace FlowTimer.Application.Services
 
         public event EventHandler<int>? ProjectArchived;
         public event EventHandler<Project>? ProjectCreated;
+        public event EventHandler<Project>? ProjectEdited;
 
         public async Task Archive(int id)
         {
@@ -35,6 +36,25 @@ namespace FlowTimer.Application.Services
             if (result)
             {
                 ProjectCreated?.Invoke(this, project);
+            }
+        }
+
+        public async Task Edit(int id, string name, string? description)
+        {
+            var project = await _projectRepository.GetById(id);
+            if (project is null)
+            {
+                throw new InvalidOperationException($"Project with ID {id} not found.");
+            }
+
+            project.Name = name;
+            project.Description = description;
+
+            var result = await _projectRepository.Update(project);
+
+            if (result)
+            {
+                ProjectEdited?.Invoke(this, project);
             }
         }
 

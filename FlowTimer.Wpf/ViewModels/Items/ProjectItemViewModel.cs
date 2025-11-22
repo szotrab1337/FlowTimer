@@ -15,26 +15,32 @@ namespace FlowTimer.Wpf.ViewModels.Items
         private int _id;
 
         [ObservableProperty]
-        private bool _isArchived;
-
-        [ObservableProperty]
         private DateTime _modifiedOn;
 
         [ObservableProperty]
-        private string _name;
+        private string _name = string.Empty;
 
         [ObservableProperty]
-        private string _tasksProgress;
+        private string _tasksProgress = string.Empty;
 
         [ObservableProperty]
-        private string _totalTime;
+        private string _totalTime = string.Empty;
 
         public ProjectItemViewModel(Project project)
+        {
+            LoadValues(project);
+        }
+
+        public void Update(Project project)
+        {
+            LoadValues(project);
+        }
+
+        private void LoadValues(Project project)
         {
             Id = project.Id;
             Name = project.Name;
             Description = project.Description;
-            IsArchived = project.IsArchived;
             CreatedOn = project.CreatedOn;
             ModifiedOn = project.ModifiedOn;
 

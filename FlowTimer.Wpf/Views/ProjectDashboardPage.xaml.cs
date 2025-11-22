@@ -1,10 +1,9 @@
-﻿using System.Windows.Controls;
-using FlowTimer.Wpf.Navigation;
+﻿using FlowTimer.Wpf.Navigation;
 using FlowTimer.Wpf.ViewModels;
 
 namespace FlowTimer.Wpf.Views
 {
-    public partial class ProjectDashboardPage : Page, INavigable
+    public partial class ProjectDashboardPage : INavigable
     {
         private readonly ProjectDashboardViewModel _viewModel;
 
@@ -16,14 +15,14 @@ namespace FlowTimer.Wpf.Views
             DataContext = _viewModel;
         }
 
-        public void OnNavigatedTo(object parameter)
+        public async void OnNavigatedTo(object parameter)
         {
             if (parameter is not int projectId)
             {
                 return;
             }
-            
-            _viewModel.Initialize(projectId);
+
+            await _viewModel.Initialize(projectId);
         }
     }
 }

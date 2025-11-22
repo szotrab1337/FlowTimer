@@ -2,16 +2,270 @@
     x:Class="FlowTimer.Wpf.Views.ProjectDashboardPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:c="clr-namespace:NKristek.Wpf.Converters;assembly=NKristek.Wpf.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:viewModels="clr-namespace:FlowTimer.Wpf.ViewModels"
     Title="ProjectPage"
-    Width="800"
-    Height="450"
     d:DataContext="{d:DesignInstance Type=viewModels:ProjectDashboardViewModel,
                                      IsDesignTimeCreatable=True}"
+    Foreground="{DynamicResource TextFillColorPrimaryBrush}"
     mc:Ignorable="d">
     <Grid>
-        <TextBlock Text="{Binding ProjectId}" />
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.Row="0" Orientation="Horizontal">
+            <Button
+                Margin="0,5,0,0"
+                VerticalAlignment="Center"
+                Command="{Binding GoBackCommand}"
+                ToolTip="Powrót">
+                <TextBlock
+                    FontFamily="{DynamicResource SymbolThemeFontFamily}"
+                    FontSize="14"
+                    Text="&#xE72B;" />
+            </Button>
+            <TextBlock
+                Margin="12,0,0,0"
+                VerticalAlignment="Center"
+                Style="{DynamicResource TitleTextBlockStyle}"
+                Text="{Binding Project.Name}" />
+        </StackPanel>
+
+        <Expander
+            Grid.Row="1"
+            Margin="0,16,0,0"
+            Padding="16"
+            Header="Szczegóły projektu"
+            IsExpanded="False">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <Grid Grid.Row="0" Grid.Column="0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <TextBlock
+                        Grid.Row="0"
+                        Grid.Column="0"
+                        Margin="0,0,0,12"
+                        Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                        Text="{Binding Project.Description}"
+                        TextWrapping="Wrap"
+                        Visibility="{Binding Project.Description, Converter={c:StringNullOrEmptyToInverseVisibilityConverter}}" />
+
+                    <StackPanel
+                        Grid.Row="1"
+                        Grid.Column="0"
+                        Orientation="Horizontal">
+                        <TextBlock Foreground="{DynamicResource TextFillColorTertiaryBrush}" Text="Utworzono: " />
+                        <TextBlock Foreground="{DynamicResource TextFillColorTertiaryBrush}" Text="{Binding Project.CreatedOn, StringFormat='{}{0:dd.MM.yyyy HH:mm}'}" />
+
+                        <TextBlock
+                            Margin="24,0,0,0"
+                            Foreground="{DynamicResource TextFillColorTertiaryBrush}"
+                            Text="Ostatnia edycja: " />
+                        <TextBlock Foreground="{DynamicResource TextFillColorTertiaryBrush}" Text="{Binding Project.ModifiedOn, StringFormat='{}{0:dd.MM.yyyy HH:mm}'}" />
+                    </StackPanel>
+                </Grid>
+
+
+                <Button
+                    Grid.Column="1"
+                    VerticalAlignment="Center"
+                    Command="{Binding EditProjectCommand}"
+                    ToolTip="Edytuj projekt">
+                    <TextBlock
+                        FontFamily="{DynamicResource SymbolThemeFontFamily}"
+                        FontSize="14"
+                        Text="&#xE70F;" />
+                </Button>
+            </Grid>
+
+        </Expander>
+        <Separator Grid.Row="2" Margin="0,5,0,0" />
+
+        <Grid Grid.Row="3" Margin="0,10,0,0">
+            <TextBlock
+                VerticalAlignment="Center"
+                Style="{DynamicResource SubtitleTextBlockStyle}"
+                Text="Zadania" />
+
+            <Button
+                HorizontalAlignment="Right"
+                VerticalAlignment="Center"
+                Command="{Binding AddWorkItemCommand}"
+                Style="{DynamicResource AccentButtonStyle}">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock
+                        Margin="0,2,0,0"
+                        VerticalAlignment="Center"
+                        FontFamily="{DynamicResource SymbolThemeFontFamily}"
+                        FontSize="14"
+                        Text="&#xE710;" />
+                    <TextBlock
+                        Margin="8,0,0,0"
+                        VerticalAlignment="Center"
+                        Text="Dodaj zadanie" />
+                </StackPanel>
+            </Button>
+        </Grid>
+
+        <TextBlock
+            Grid.Row="4"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            Foreground="{DynamicResource TextFillColorDisabledBrush}"
+            Text="Brak zadań. Dodaj pierwsze zadanie!">
+            <TextBlock.Style>
+                <Style TargetType="TextBlock">
+                    <Setter Property="Visibility" Value="Collapsed" />
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding WorkItems.Count}" Value="0">
+                            <Setter Property="Visibility" Value="Visible" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </TextBlock.Style>
+        </TextBlock>
+
+        <ListView
+            Grid.Row="4"
+            Margin="0,12,0,0"
+            ItemsSource="{Binding WorkItems}">
+            <ListView.ItemContainerStyle>
+                <Style BasedOn="{StaticResource {x:Type ListViewItem}}" TargetType="ListViewItem">
+                    <Setter Property="Background" Value="{DynamicResource CardBackgroundFillColorDefaultBrush}" />
+                    <Setter Property="Margin" Value="0,0,0,8" />
+                </Style>
+            </ListView.ItemContainerStyle>
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <Grid Margin="5,10">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+
+                        <CheckBox
+                            Grid.Row="0"
+                            Grid.RowSpan="3"
+                            Grid.Column="0"
+                            Margin="0,0,12,0"
+                            VerticalAlignment="Center"
+                            Command="{Binding DataContext.ToggleCompletedCommand, RelativeSource={RelativeSource AncestorType=ListView}}"
+                            CommandParameter="{Binding}"
+                            IsChecked="{Binding IsCompleted, Mode=OneWay}"
+                            ToolTip="Oznacz jako ukończone" />
+
+                        <TextBlock
+                            Grid.Row="0"
+                            Grid.Column="1"
+                            FontSize="16"
+                            FontWeight="SemiBold"
+                            Text="{Binding Name}" />
+
+                        <TextBlock
+                            Grid.Row="1"
+                            Grid.Column="1"
+                            Margin="0,4,0,0"
+                            Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                            Text="{Binding Description}"
+                            TextTrimming="CharacterEllipsis" />
+
+                        <StackPanel
+                            Grid.Row="2"
+                            Grid.Column="1"
+                            Margin="0,8,0,0"
+                            Orientation="Horizontal">
+                            <TextBlock
+                                Margin="0,2,0,0"
+                                VerticalAlignment="Center"
+                                FontFamily="{DynamicResource SymbolThemeFontFamily}"
+                                FontSize="12"
+                                Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                Text="&#xE823;" />
+                            <TextBlock
+                                Margin="6,0,0,0"
+                                VerticalAlignment="Center"
+                                Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                Text="{Binding TotalTime}" />
+                        </StackPanel>
+
+                        <Button
+                            Grid.Row="0"
+                            Grid.RowSpan="3"
+                            Grid.Column="2"
+                            Margin="8,0"
+                            VerticalAlignment="Center"
+                            Command="{Binding DataContext.ToggleTimerCommand, RelativeSource={RelativeSource AncestorType=ListView}}"
+                            CommandParameter="{Binding}"
+                            ToolTip="Włącz/Wyłącz timer">
+                            <TextBlock FontFamily="{DynamicResource SymbolThemeFontFamily}" FontSize="14">
+                                <TextBlock.Style>
+                                    <Style BasedOn="{StaticResource {x:Type TextBlock}}" TargetType="TextBlock">
+                                        <Setter Property="Text" Value="&#xE768;" />
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding IsSessionActive}" Value="{StaticResource True}">
+                                                <Setter Property="Text" Value="&#xE71A;" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBlock.Style>
+                            </TextBlock>
+                        </Button>
+
+                        <Button
+                            Grid.Row="0"
+                            Grid.RowSpan="3"
+                            Grid.Column="3"
+                            Margin="0,0,8,0"
+                            VerticalAlignment="Center"
+                            Command="{Binding DataContext.EditWorkItemCommand, RelativeSource={RelativeSource AncestorType=ListView}}"
+                            CommandParameter="{Binding}"
+                            ToolTip="Edytuj">
+                            <TextBlock
+                                FontFamily="{DynamicResource SymbolThemeFontFamily}"
+                                FontSize="14"
+                                Text="&#xE70F;" />
+                        </Button>
+
+                        <Button
+                            Grid.Row="0"
+                            Grid.RowSpan="3"
+                            Grid.Column="4"
+                            VerticalAlignment="Center"
+                            Command="{Binding DataContext.ArchiveWorkItemCommand, RelativeSource={RelativeSource AncestorType=ListView}}"
+                            CommandParameter="{Binding}"
+                            ToolTip="Usuń">
+                            <TextBlock
+                                FontFamily="{DynamicResource SymbolThemeFontFamily}"
+                                FontSize="14"
+                                Text="&#xE74D;" />
+                        </Button>
+                    </Grid>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
     </Grid>
 </Page>

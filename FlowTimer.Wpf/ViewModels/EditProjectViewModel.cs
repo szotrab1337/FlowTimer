@@ -38,7 +38,7 @@ namespace FlowTimer.Wpf.ViewModels
                 _projectId = projectId;
 
                 var project = await _projectService.GetById(_projectId);
-                
+
                 if (project is not null)
                 {
                     Name = project.Name;
@@ -73,7 +73,7 @@ namespace FlowTimer.Wpf.ViewModels
 
             try
             {
-                await _projectService.Create(Name, Description);
+                await _projectService.Edit(_projectId, Name, Description);
                 _navigationService.NavigateBack();
             }
             catch (Exception ex)

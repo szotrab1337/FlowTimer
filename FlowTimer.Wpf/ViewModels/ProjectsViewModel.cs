@@ -43,6 +43,17 @@ namespace FlowTimer.Wpf.ViewModels
 
             _projectService.ProjectCreated += OnProjectCreated;
             _projectService.ProjectArchived += OnProjectArchived;
+            _projectService.ProjectEdited += OnProjectEdited;
+        }
+
+        private void OnProjectEdited(object? sender, Project e)
+        {
+            var project = Projects.FirstOrDefault(x => x.Id == e.Id);
+
+            if (project is not null)
+            {
+                project.Update(e);
+            }
         }
 
         [RelayCommand]
