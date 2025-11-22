@@ -51,7 +51,7 @@ namespace FlowTimer.Wpf.ViewModels
                 return;
             }
 
-            _navigationService.Navigate(typeof(ProjectPage), value.Id);
+            _navigationService.Navigate(typeof(ProjectDashboardPage), value.Id);
         }
     }
 }

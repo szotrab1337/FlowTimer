@@ -4,11 +4,11 @@ using FlowTimer.Wpf.ViewModels;
 
 namespace FlowTimer.Wpf.Views
 {
-    public partial class ProjectPage : Page, INavigable
+    public partial class ProjectDashboardPage : Page, INavigable
     {
-        private readonly ProjectViewModel _viewModel;
+        private readonly ProjectDashboardViewModel _viewModel;
 
-        public ProjectPage(ProjectViewModel viewModel)
+        public ProjectDashboardPage(ProjectDashboardViewModel viewModel)
         {
             InitializeComponent();
 

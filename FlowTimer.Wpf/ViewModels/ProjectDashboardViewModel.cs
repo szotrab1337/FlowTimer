@@ -2,7 +2,7 @@
 
 namespace FlowTimer.Wpf.ViewModels
 {
-    public partial class ProjectViewModel : ObservableObject
+    public partial class ProjectDashboardViewModel : ObservableObject
     {
         [ObservableProperty]
         private int _projectId;
