@@ -8,6 +8,7 @@
     Title="EditProjectPage"
     d:DataContext="{d:DesignInstance Type=viewModels:EditProjectViewModel,
                                      IsDesignTimeCreatable=True}"
+    FocusManager.FocusedElement="{Binding ElementName=NameTextBox}"
     Foreground="{DynamicResource TextFillColorPrimaryBrush}"
     mc:Ignorable="d">
     <Grid>
@@ -37,6 +38,7 @@
                             Focusable="True"
                             Style="{StaticResource GenericLabelStyle}" />
                         <TextBox
+                            x:Name="NameTextBox"
                             Margin="0,5,0,15"
                             Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}" />
 
