@@ -27,6 +27,9 @@ namespace FlowTimer.Wpf.Extensions
 
                 services.AddTransient<AddProjectPage>();
                 services.AddTransient<AddProjectViewModel>();
+
+                services.AddTransient<EditProjectPage>();
+                services.AddTransient<EditProjectViewModel>();
             }
         }
     }

@@ -9,5 +9,6 @@ namespace FlowTimer.Application.Interfaces
         Task Archive(int id);
         Task Create(string name, string? description);
         Task<List<Project>> GetAll();
+        Task<Project?> GetById(int id);
     }
 }

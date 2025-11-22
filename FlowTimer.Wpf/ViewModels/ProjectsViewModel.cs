@@ -76,6 +76,7 @@ namespace FlowTimer.Wpf.ViewModels
         [RelayCommand]
         private void EditProject(ProjectItemViewModel vm)
         {
+            _navigationService.Navigate(typeof(EditProjectPage), vm.Id);
         }
 
         private void OnProjectArchived(object? sender, int e)

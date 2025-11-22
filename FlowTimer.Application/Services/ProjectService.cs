@@ -42,5 +42,10 @@ namespace FlowTimer.Application.Services
         {
             return await _projectRepository.GetAll();
         }
+
+        public async Task<Project?> GetById(int id)
+        {
+            return await _projectRepository.GetById(id);
+        }
     }
 }
