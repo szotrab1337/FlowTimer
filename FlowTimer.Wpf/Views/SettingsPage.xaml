@@ -4,9 +4,84 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:viewModels="clr-namespace:FlowTimer.Wpf.ViewModels"
     Title="SettingsPage"
+    d:DataContext="{d:DesignInstance Type=viewModels:SettingsViewModel,
+                                     IsDesignTimeCreatable=True}"
+    Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+    Loaded="Page_OnLoaded"
     mc:Ignorable="d">
     <Grid>
-        <Label Content="SETTINGS" />
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <TextBlock
+            Grid.Row="0"
+            VerticalAlignment="Center"
+            Style="{DynamicResource TitleTextBlockStyle}"
+            Text="Ustawienia" />
+
+        <ScrollViewer
+            Grid.Row="1"
+            Margin="0,20,0,24"
+            Padding="0,0,24,0">
+            <StackPanel>
+                <TextBlock
+                    Margin="10"
+                    FontSize="14"
+                    FontWeight="SemiBold"
+                    Text="Wygląd" />
+                <Grid
+                    Margin="0,0,0,20"
+                    Background="Transparent">
+                    <Border
+                        Padding="{DynamicResource ExpanderPadding}"
+                        Background="{DynamicResource ExpanderHeaderBackground}"
+                        BorderBrush="{DynamicResource ExpanderHeaderBorderBrush}"
+                        BorderThickness="{DynamicResource ExpanderBorderThemeThickness}"
+                        CornerRadius="{DynamicResource ControlCornerRadius}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+
+                            <TextBlock
+                                Grid.Column="0"
+                                Width="20"
+                                Height="20"
+                                Margin="10,5,10,5"
+                                VerticalAlignment="Center"
+                                FontFamily="{DynamicResource SymbolThemeFontFamily}"
+                                FontSize="20"
+                                Text="&#xE790;" />
+
+                            <StackPanel
+                                Grid.Column="1"
+                                Margin="12,16,12,12"
+                                Orientation="Vertical">
+                                <TextBlock
+                                    FontSize="14"
+                                    Text="Motyw aplikacji" />
+                            </StackPanel>
+
+                            <ComboBox
+                                Grid.Column="2"
+                                MinWidth="200"
+                                Margin="10"
+                                HorizontalAlignment="Right"
+                                SelectedIndex="{Binding SelectedThemeIndex}">
+                                <ComboBoxItem Content="Jasny" />
+                                <ComboBoxItem Content="Ciemny" />
+                                <ComboBoxItem Content="Użyj ustawień systemowych" />
+                            </ComboBox>
+                        </Grid>
+                    </Border>
+                </Grid>
+            </StackPanel>
+        </ScrollViewer>
     </Grid>
 </Page>

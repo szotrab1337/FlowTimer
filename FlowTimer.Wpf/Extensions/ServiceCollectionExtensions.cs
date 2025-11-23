@@ -19,7 +19,8 @@ namespace FlowTimer.Wpf.Extensions
                 services.AddTransient<HomePage>();
                 services.AddTransient<HomeViewModel>();
 
-                services.AddTransient<SettingsPage>();
+                services.AddSingleton<SettingsPage>();
+                services.AddTransient<SettingsViewModel>();
 
                 services.AddTransient<ProjectsPage>();
                 services.AddTransient<ProjectsViewModel>();

@@ -1,6 +1,8 @@
-﻿using FlowTimer.Domain.Repositories;
+﻿using FlowTimer.Application.Interfaces;
+using FlowTimer.Domain.Repositories;
 using FlowTimer.Infrastructure.Persistence;
 using FlowTimer.Infrastructure.Repositories;
+using FlowTimer.Infrastructure.Settings;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -20,6 +22,7 @@ namespace FlowTimer.Infrastructure.Extensions
                 services.AddScoped<IProjectRepository, ProjectRepository>();
                 services.AddScoped<IWorkItemRepository, WorkItemRepository>();
                 services.AddScoped<ISessionRepository, SessionRepository>();
+                services.AddSingleton<ISettingsService, SettingsService>();
             }
         }
     }

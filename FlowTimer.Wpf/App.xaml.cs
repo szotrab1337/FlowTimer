@@ -26,8 +26,19 @@ namespace FlowTimer.Wpf
             Host.ApplyMigrations();
             Host.Start();
 
+            var settingsService = Host.Services.GetRequiredService<ISettingsService>();
+            var theme = settingsService.GetTheme();
+
             var app = new App();
             app.InitializeComponent();
+
+            app.ThemeMode = theme switch
+            {
+                "Light" => ThemeMode.Light,
+                "Dark" => ThemeMode.Dark,
+                _ => ThemeMode.System
+            };
+
             app.MainWindow = Host.Services.GetRequiredService<MainWindow>();
             app.MainWindow.Visibility = Visibility.Visible;
             app.Run();

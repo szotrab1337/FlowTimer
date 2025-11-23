@@ -170,6 +170,7 @@
                         Grid.Row="1"
                         Margin="8,8,0,0"
                         ItemsSource="{Binding MenuItems}"
+                        PreviewMouseLeftButtonDown="Menu_OnPreviewMouseLeftButtonDown"
                         SelectedItem="{Binding SelectedMenuItem}">
                         <ListView.ItemTemplate>
                             <DataTemplate>
