@@ -5,11 +5,11 @@
     xmlns:c="clr-namespace:NKristek.Wpf.Converters;assembly=NKristek.Wpf.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:views="clr-namespace:FlowTimer.Wpf.Views"
+    xmlns:viewModels="clr-namespace:FlowTimer.Wpf.ViewModels"
     Title="Flow Timer"
     Width="1200"
     Height="800"
-    d:DataContext="{d:DesignInstance views:MainWindow,
+    d:DataContext="{d:DesignInstance viewModels:MainViewModel,
                                      IsDesignTimeCreatable=False}"
     WindowStartupLocation="CenterScreen"
     mc:Ignorable="d">
@@ -165,16 +165,14 @@
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
 
-                    <TreeView
+                    <ListView
                         x:Name="Menu"
                         Grid.Row="1"
                         Margin="8,8,0,0"
-                        AutomationProperties.Name="Navigation Pane"
-                        ItemsSource="{Binding ViewModel.MenuItems}"
-                        PreviewMouseLeftButtonUp="Menu_PreviewMouseLeftButtonUp"
-                        SelectedItemChanged="Menu_OnSelectedItemChanged">
-                        <TreeView.ItemTemplate>
-                            <HierarchicalDataTemplate ItemsSource="{Binding Items}">
+                        ItemsSource="{Binding MenuItems}"
+                        SelectedItem="{Binding SelectedMenuItem}">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
                                 <Grid MinHeight="30">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="Auto" />
@@ -184,7 +182,6 @@
                                     <TextBlock
                                         MaxWidth="16"
                                         VerticalAlignment="Center"
-                                        AutomationProperties.Name="{Binding Title, StringFormat='{}{0} Page'}"
                                         Focusable="False"
                                         FontFamily="{DynamicResource SymbolThemeFontFamily}"
                                         FontSize="16"
@@ -194,9 +191,9 @@
                                         VerticalAlignment="Center"
                                         Text="{Binding Title}" />
                                 </Grid>
-                            </HierarchicalDataTemplate>
-                        </TreeView.ItemTemplate>
-                    </TreeView>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
 
                     <Grid Grid.Row="2">
                         <Grid.RowDefinitions>
@@ -213,7 +210,7 @@
                             BorderBrush="{DynamicResource ControlStrokeColorSecondaryBrush}"
                             BorderThickness="1"
                             CornerRadius="6"
-                            Visibility="{Binding ViewModel.IsTimerRunning, Converter={c:BoolToVisibilityConverter}}">
+                            Visibility="{Binding IsTimerRunning, Converter={c:BoolToVisibilityConverter}}">
                             <Grid>
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="Auto" />
@@ -232,7 +229,7 @@
                                     Margin="0,6,0,0"
                                     FontSize="20"
                                     FontWeight="Bold"
-                                    Text="{Binding ViewModel.ActiveSessionTime}" />
+                                    Text="{Binding ActiveSessionTime}" />
 
                                 <StackPanel
                                     Grid.Row="2"
@@ -240,7 +237,7 @@
                                     Orientation="Horizontal">
                                     <Button
                                         Padding="8,4"
-                                        Command="{Binding ViewModel.GoToActiveProjectCommand}">
+                                        Command="{Binding GoToActiveProjectCommand}">
                                         <StackPanel Orientation="Horizontal">
                                             <TextBlock
                                                 Margin="0,2,0,0"
@@ -257,7 +254,7 @@
                                     <Button
                                         Margin="8,0,0,0"
                                         Padding="8,4"
-                                        Command="{Binding ViewModel.StopTimerCommand}">
+                                        Command="{Binding StopTimerCommand}">
                                         <StackPanel Orientation="Horizontal">
                                             <TextBlock
                                                 Margin="0,2,0,0"
@@ -280,7 +277,7 @@
                             Margin="10,5,3,10"
                             HorizontalContentAlignment="Left"
                             AutomationProperties.Name="Settings"
-                            Command="{Binding ViewModel.SettingsCommand}">
+                            Command="{Binding SettingsCommand}">
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock
                                     Margin="0,4,0,0"

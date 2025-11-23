@@ -3,11 +3,317 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:local="clr-namespace:FlowTimer.Wpf.Views"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:viewModels="clr-namespace:FlowTimer.Wpf.ViewModels"
     Title="HomePage"
+    Margin="-24,-16,-24,12"
+    d:DataContext="{d:DesignInstance Type=viewModels:HomeViewModel,
+                                     IsDesignTimeCreatable=True}"
+    Loaded="Page_OnLoaded"
     mc:Ignorable="d">
-    <Grid>
-        <Label Content="HOME PAGE" />
-    </Grid>
+    <ScrollViewer>
+
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <Border
+                Grid.Row="0"
+                Grid.RowSpan="2"
+                CornerRadius="8,0,0,0">
+                <Border.Background>
+                    <ImageBrush
+                        ImageSource="pack://application:,,,/Assets/home-light.png"
+                        Stretch="UniformToFill" />
+                </Border.Background>
+                <Border.OpacityMask>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                        <GradientStop Offset="0.7" Color="Black" />
+                        <GradientStop Offset="0.9" Color="Transparent" />
+                    </LinearGradientBrush>
+                </Border.OpacityMask>
+            </Border>
+
+            <Border
+                Grid.Row="0"
+                Height="220"
+                BorderThickness="0,0,0,1"
+                CornerRadius="8,0,0,0">
+
+                <StackPanel
+                    Margin="36,48,0,0"
+                    VerticalAlignment="Top"
+                    TextElement.Foreground="Black">
+                    <TextBlock
+                        Margin="0,0,0,8"
+                        AutomationProperties.HeadingLevel="Level1"
+                        Style="{DynamicResource TitleLargeTextBlockStyle}"
+                        Text="Flow Timer" />
+                    <TextBlock
+                        Margin="0,0,0,2"
+                        AutomationProperties.HeadingLevel="Level1"
+                        Style="{DynamicResource SubtitleTextBlockStyle}"
+                        Text="Monitoring czasu dla projektów i zadań." />
+                    <Border
+                        MaxWidth="350"
+                        HorizontalAlignment="Left"
+                        Background="Transparent"
+                        CornerRadius="8,8,8,8">
+                        <TextBlock
+                            MaxWidth="350"
+                            Margin="0,0,0,0"
+                            Padding="0,8,12,8"
+                            HorizontalAlignment="Left"
+                            Style="{DynamicResource BodyStrongTextBlockStyle}"
+                            Text="Rejestruj czas pracy, organizuj projekty i analizuj swoje tempo — wszystko w jednym miejscu."
+                            TextAlignment="Left" />
+                    </Border>
+                </StackPanel>
+            </Border>
+
+            <!--  Statistics Section  -->
+            <StackPanel
+                Grid.Row="1"
+                Margin="24,48,24,24">
+
+                <!--  Statistics Cards Grid  -->
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="16" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="16" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <!--  Projects Card  -->
+                    <Border
+                        Grid.Row="0"
+                        Grid.Column="0"
+                        Padding="20"
+                        Background="{DynamicResource SolidBackgroundFillColorTertiaryBrush}"
+                        BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}"
+                        BorderThickness="1"
+                        CornerRadius="8"
+                        Opacity="0.85">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+
+                            <StackPanel
+                                Grid.Row="0"
+                                Grid.Column="0">
+                                <TextBlock
+                                    FontSize="13"
+                                    Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                    Text="Projekty" />
+                                <TextBlock
+                                    Margin="0,8,0,0"
+                                    FontSize="32"
+                                    FontWeight="SemiBold"
+                                    Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                                    Text="{Binding ProjectsCount}" />
+                            </StackPanel>
+
+                            <Border
+                                Grid.Row="0"
+                                Grid.RowSpan="2"
+                                Grid.Column="1"
+                                Width="56"
+                                Height="56"
+                                VerticalAlignment="Center"
+                                Background="{DynamicResource SystemFillColorAttentionBrush}"
+                                CornerRadius="28">
+                                <TextBlock
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    FontFamily="{DynamicResource SymbolThemeFontFamily}"
+                                    FontSize="24"
+                                    Foreground="{DynamicResource TextOnAccentFillColorPrimaryBrush}"
+                                    Text="&#xEBC6;" />
+                            </Border>
+                        </Grid>
+                    </Border>
+
+                    <!--  Pending Tasks Card  -->
+                    <Border
+                        Grid.Row="0"
+                        Grid.Column="2"
+                        Padding="20"
+                        Background="{DynamicResource SolidBackgroundFillColorTertiaryBrush}"
+                        BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}"
+                        BorderThickness="1"
+                        CornerRadius="8"
+                        Opacity="0.85">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+
+                            <StackPanel
+                                Grid.Row="0"
+                                Grid.Column="0">
+                                <TextBlock
+                                    FontSize="13"
+                                    Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                    Text="Zadania do wykonania" />
+                                <TextBlock
+                                    Margin="0,8,0,0"
+                                    FontSize="32"
+                                    FontWeight="SemiBold"
+                                    Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                                    Text="{Binding PendingTasksCount}" />
+                            </StackPanel>
+
+                            <Border
+                                Grid.Row="0"
+                                Grid.RowSpan="2"
+                                Grid.Column="1"
+                                Width="56"
+                                Height="56"
+                                VerticalAlignment="Center"
+                                Background="{DynamicResource SystemFillColorCriticalBrush}"
+                                CornerRadius="28">
+                                <TextBlock
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    FontFamily="{DynamicResource SymbolThemeFontFamily}"
+                                    FontSize="24"
+                                    Foreground="{DynamicResource TextOnAccentFillColorPrimaryBrush}"
+                                    Text="&#xE9D5;" />
+                            </Border>
+                        </Grid>
+                    </Border>
+
+                    <!--  Total Time Card  -->
+                    <Border
+                        Grid.Row="2"
+                        Grid.Column="0"
+                        Padding="20"
+                        Background="{DynamicResource SolidBackgroundFillColorTertiaryBrush}"
+                        BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}"
+                        BorderThickness="1"
+                        CornerRadius="8"
+                        Opacity="0.85">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+
+                            <StackPanel
+                                Grid.Row="0"
+                                Grid.Column="0">
+                                <TextBlock
+                                    FontSize="13"
+                                    Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                    Text="Zarejestrowany czas" />
+                                <TextBlock
+                                    Margin="0,8,0,0"
+                                    FontSize="28"
+                                    FontWeight="SemiBold"
+                                    Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                                    Text="{Binding TotalTimeFormatted}" />
+                            </StackPanel>
+
+                            <Border
+                                Grid.Row="0"
+                                Grid.RowSpan="2"
+                                Grid.Column="1"
+                                Width="56"
+                                Height="56"
+                                VerticalAlignment="Center"
+                                Background="{DynamicResource SystemFillColorSuccessBrush}"
+                                CornerRadius="28">
+                                <TextBlock
+                                    Margin="4,0,0,0"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    FontFamily="{DynamicResource SymbolThemeFontFamily}"
+                                    FontSize="24"
+                                    Foreground="{DynamicResource TextOnAccentFillColorPrimaryBrush}"
+                                    Text="&#xE823;" />
+                            </Border>
+                        </Grid>
+                    </Border>
+
+                    <!--  Sessions Card  -->
+                    <Border
+                        Grid.Row="2"
+                        Grid.Column="2"
+                        Padding="20"
+                        Background="{DynamicResource SolidBackgroundFillColorTertiaryBrush}"
+                        BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}"
+                        BorderThickness="1"
+                        CornerRadius="8"
+                        Opacity="0.85">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+
+                            <StackPanel
+                                Grid.Row="0"
+                                Grid.Column="0">
+                                <TextBlock
+                                    FontSize="13"
+                                    Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                    Text="Sesje pracy" />
+                                <TextBlock
+                                    Margin="0,8,0,0"
+                                    FontSize="32"
+                                    FontWeight="SemiBold"
+                                    Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                                    Text="{Binding SessionsCount}" />
+                            </StackPanel>
+
+                            <Border
+                                Grid.Row="0"
+                                Grid.RowSpan="2"
+                                Grid.Column="1"
+                                Width="56"
+                                Height="56"
+                                VerticalAlignment="Center"
+                                Background="{DynamicResource SystemFillColorCautionBrush}"
+                                CornerRadius="28">
+                                <TextBlock
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    FontFamily="{DynamicResource SymbolThemeFontFamily}"
+                                    FontSize="24"
+                                    Foreground="{DynamicResource TextOnAccentFillColorPrimaryBrush}"
+                                    Text="&#xE8B1;" />
+                            </Border>
+                        </Grid>
+                    </Border>
+                </Grid>
+            </StackPanel>
+
+        </Grid>
+    </ScrollViewer>
 </Page>

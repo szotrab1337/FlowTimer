@@ -40,6 +40,9 @@ namespace FlowTimer.Wpf.ViewModels
             }
         ];
 
+        [ObservableProperty]
+        private MenuItem? _selectedMenuItem;
+
         public void Initialize()
         {
             IsTimerRunning = _sessionTimerService.IsRunning;
@@ -47,6 +50,8 @@ namespace FlowTimer.Wpf.ViewModels
             _sessionTimerService.Tick += OnTimerTick;
             _sessionTimerService.SessionStarted += OnSessionStarted;
             _sessionTimerService.SessionStopped += OnSessionStopped;
+
+            SelectedMenuItem = MenuItems.FirstOrDefault();
         }
 
         public void Navigate(MenuItem? value)
@@ -66,6 +71,11 @@ namespace FlowTimer.Wpf.ViewModels
             {
                 _navigationService.Navigate(typeof(ProjectDashboardPage), _sessionTimerService.ActiveProjectId.Value);
             }
+        }
+
+        partial void OnSelectedMenuItemChanged(MenuItem? value)
+        {
+            Navigate(value);
         }
 
         private void OnSessionStarted(object? sender, SessionStartedEventArgs e)
