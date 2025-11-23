@@ -12,6 +12,7 @@ namespace FlowTimer.Application.Extensions
             {
                 services.AddScoped<IProjectService, ProjectService>();
                 services.AddScoped<IWorkItemService, WorkItemService>();
+                services.AddScoped<IDashboardService, DashboardService>();
 
                 services.AddSingleton<ISessionTimerService, SessionTimerService>();
             }

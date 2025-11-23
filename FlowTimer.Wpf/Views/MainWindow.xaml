@@ -2,19 +2,22 @@
     x:Class="FlowTimer.Wpf.Views.MainWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:c="clr-namespace:NKristek.Wpf.Converters;assembly=NKristek.Wpf.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:views="clr-namespace:FlowTimer.Wpf.Views"
+    xmlns:viewModels="clr-namespace:FlowTimer.Wpf.ViewModels"
     Title="Flow Timer"
     Width="1200"
     Height="800"
-    d:DataContext="{d:DesignInstance views:MainWindow,
+    d:DataContext="{d:DesignInstance viewModels:MainViewModel,
                                      IsDesignTimeCreatable=False}"
     WindowStartupLocation="CenterScreen"
     mc:Ignorable="d">
     <Window.Resources>
 
-        <Style x:Key="TitleBarDefaultButtonStyle" TargetType="Button">
+        <Style
+            x:Key="TitleBarDefaultButtonStyle"
+            TargetType="Button">
             <Setter Property="MinWidth" Value="48" />
             <Setter Property="MinHeight" Value="32" />
             <Setter Property="Background" Value="Transparent" />
@@ -162,16 +165,14 @@
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
 
-                    <TreeView
+                    <ListView
                         x:Name="Menu"
                         Grid.Row="1"
                         Margin="8,8,0,0"
-                        AutomationProperties.Name="Navigation Pane"
-                        ItemsSource="{Binding ViewModel.MenuItems}"
-                        PreviewMouseLeftButtonUp="Menu_PreviewMouseLeftButtonUp"
-                        SelectedItemChanged="Menu_OnSelectedItemChanged">
-                        <TreeView.ItemTemplate>
-                            <HierarchicalDataTemplate ItemsSource="{Binding Items}">
+                        ItemsSource="{Binding MenuItems}"
+                        SelectedItem="{Binding SelectedMenuItem}">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
                                 <Grid MinHeight="30">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="Auto" />
@@ -181,7 +182,6 @@
                                     <TextBlock
                                         MaxWidth="16"
                                         VerticalAlignment="Center"
-                                        AutomationProperties.Name="{Binding Title, StringFormat='{}{0} Page'}"
                                         Focusable="False"
                                         FontFamily="{DynamicResource SymbolThemeFontFamily}"
                                         FontSize="16"
@@ -191,26 +191,105 @@
                                         VerticalAlignment="Center"
                                         Text="{Binding Title}" />
                                 </Grid>
-                            </HierarchicalDataTemplate>
-                        </TreeView.ItemTemplate>
-                    </TreeView>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
 
-                    <DockPanel Grid.Row="2">
+                    <Grid Grid.Row="2">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+
+                        <Border
+                            x:Name="ActiveSessionCard"
+                            Grid.Row="0"
+                            Margin="10,10,3,5"
+                            Padding="12"
+                            Background="{DynamicResource SmokeFillColorDefaultBrush}"
+                            BorderBrush="{DynamicResource ControlStrokeColorSecondaryBrush}"
+                            BorderThickness="1"
+                            CornerRadius="6"
+                            Visibility="{Binding IsTimerRunning, Converter={c:BoolToVisibilityConverter}}">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+
+                                <TextBlock
+                                    Grid.Row="0"
+                                    FontSize="11"
+                                    FontWeight="SemiBold"
+                                    Text="AKTYWNA SESJA" />
+
+                                <TextBlock
+                                    Grid.Row="1"
+                                    Margin="0,6,0,0"
+                                    FontSize="20"
+                                    FontWeight="Bold"
+                                    Text="{Binding ActiveSessionTime}" />
+
+                                <StackPanel
+                                    Grid.Row="2"
+                                    Margin="0,8,0,0"
+                                    Orientation="Horizontal">
+                                    <Button
+                                        Padding="8,4"
+                                        Command="{Binding GoToActiveProjectCommand}">
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock
+                                                Margin="0,2,0,0"
+                                                FontFamily="{DynamicResource SymbolThemeFontFamily}"
+                                                FontSize="12"
+                                                Text="&#xE8A7;" />
+                                            <TextBlock
+                                                Margin="6,0,0,0"
+                                                FontSize="12"
+                                                Text="Szczegóły" />
+                                        </StackPanel>
+                                    </Button>
+
+                                    <Button
+                                        Margin="8,0,0,0"
+                                        Padding="8,4"
+                                        Command="{Binding StopTimerCommand}">
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock
+                                                Margin="0,2,0,0"
+                                                FontFamily="{DynamicResource SymbolThemeFontFamily}"
+                                                FontSize="12"
+                                                Text="&#xE71A;" />
+                                            <TextBlock
+                                                Margin="6,0,0,0"
+                                                FontSize="12"
+                                                Text="Zatrzymaj" />
+                                        </StackPanel>
+                                    </Button>
+                                </StackPanel>
+                            </Grid>
+                        </Border>
+
                         <Button
+                            Grid.Row="1"
                             Width="250"
-                            Margin="10"
+                            Margin="10,5,3,10"
                             HorizontalContentAlignment="Left"
                             AutomationProperties.Name="Settings"
-                            Command="{Binding ViewModel.SettingsCommand}"
-                            DockPanel.Dock="Bottom">
+                            Command="{Binding SettingsCommand}">
                             <StackPanel Orientation="Horizontal">
-                                <TextBlock Margin="0,4,0,0" FontFamily="{DynamicResource SymbolThemeFontFamily}">
+                                <TextBlock
+                                    Margin="0,4,0,0"
+                                    FontFamily="{DynamicResource SymbolThemeFontFamily}">
                                     &#xE713;
                                 </TextBlock>
-                                <TextBlock Margin="8,0,0,0" Text="Ustawienia" />
+                                <TextBlock
+                                    Margin="8,0,0,0"
+                                    Text="Ustawienia" />
                             </StackPanel>
                         </Button>
-                    </DockPanel>
+                    </Grid>
                 </Grid>
                 <Border
                     Grid.Column="1"
@@ -220,7 +299,9 @@
                     BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}"
                     BorderThickness="1"
                     CornerRadius="8,0,0,0">
-                    <Frame x:Name="RootContentFrame" NavigationUIVisibility="Hidden" />
+                    <Frame
+                        x:Name="RootContentFrame"
+                        NavigationUIVisibility="Hidden" />
                 </Border>
             </Grid>
         </Grid>

@@ -1,28 +1,26 @@
 ﻿using System.Windows;
-using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shell;
 using FlowTimer.Wpf.Helpers;
 using FlowTimer.Wpf.Navigation;
 using FlowTimer.Wpf.ViewModels;
 using Microsoft.Win32;
-using MenuItem = FlowTimer.Wpf.Models.MenuItem;
 
 namespace FlowTimer.Wpf.Views
 {
     public partial class MainWindow
     {
-        public MainWindow(MainViewModel viewModel, INavigationService navigationService)
+        public MainWindow(
+            MainViewModel viewModel,
+            INavigationService navigationService)
         {
-            ViewModel = viewModel;
-            DataContext = this;
+            DataContext = viewModel;
             InitializeComponent();
 
             UpdateWindowBackground();
             UpdateMainWindowVisuals();
 
             navigationService.SetFrame(RootContentFrame);
-            navigationService.Navigate(typeof(HomePage));
 
             WindowChrome.SetWindowChrome(
                 this,
@@ -43,9 +41,9 @@ namespace FlowTimer.Wpf.Views
             StateChanged += (_, _) => UpdateMainWindowVisuals();
             Activated += (_, _) => UpdateMainWindowVisuals();
             Deactivated += (_, _) => UpdateMainWindowVisuals();
-        }
 
-        public MainViewModel ViewModel { get; }
+            viewModel.Initialize();
+        }
 
         private void CloseWindow(object sender, RoutedEventArgs e)
         {
@@ -66,29 +64,9 @@ namespace FlowTimer.Wpf.Views
             }
         }
 
-        private void Menu_OnSelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
-        {
-            NavigateToSelectedMenuItem();
-        }
-
-        private void Menu_PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
-        {
-            NavigateToSelectedMenuItem();
-        }
-
         private void MinimizeWindow(object sender, RoutedEventArgs e)
         {
             WindowState = WindowState.Minimized;
-        }
-
-        private void NavigateToSelectedMenuItem()
-        {
-            if (Menu.SelectedItem is not MenuItem navItem)
-            {
-                return;
-            }
-
-            ViewModel.Navigate(navItem);
         }
 
         private void SystemEvents_UserPreferenceChanged(object sender, UserPreferenceChangedEventArgs e)
