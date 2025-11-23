@@ -1,7 +1,9 @@
 ﻿using System.Windows;
+using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shell;
 using FlowTimer.Wpf.Helpers;
+using FlowTimer.Wpf.Models;
 using FlowTimer.Wpf.Navigation;
 using FlowTimer.Wpf.ViewModels;
 using Microsoft.Win32;
@@ -10,12 +12,16 @@ namespace FlowTimer.Wpf.Views
 {
     public partial class MainWindow
     {
+        private readonly MainViewModel _viewModel;
+
         public MainWindow(
             MainViewModel viewModel,
             INavigationService navigationService)
         {
-            DataContext = viewModel;
             InitializeComponent();
+
+            _viewModel = viewModel;
+            DataContext = _viewModel;
 
             UpdateWindowBackground();
             UpdateMainWindowVisuals();
@@ -42,7 +48,7 @@ namespace FlowTimer.Wpf.Views
             Activated += (_, _) => UpdateMainWindowVisuals();
             Deactivated += (_, _) => UpdateMainWindowVisuals();
 
-            viewModel.Initialize();
+            _viewModel.Initialize();
         }
 
         private void CloseWindow(object sender, RoutedEventArgs e)
@@ -62,6 +68,16 @@ namespace FlowTimer.Wpf.Views
                 WindowState = WindowState.Maximized;
                 MaximizeIcon.Text = "\uE923";
             }
+        }
+
+        private void Menu_OnPreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            if (Menu.SelectedItem is not MenuItem navItem)
+            {
+                return;
+            }
+
+            _viewModel.Navigate(navItem);
         }
 
         private void MinimizeWindow(object sender, RoutedEventArgs e)
