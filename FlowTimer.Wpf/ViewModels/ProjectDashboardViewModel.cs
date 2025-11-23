@@ -1,8 +1,8 @@
 ﻿using System.Collections.ObjectModel;
-using System.Windows;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using FlowTimer.Application.Interfaces;
+using FlowTimer.Wpf.Dialogs;
 using FlowTimer.Wpf.Navigation;
 using FlowTimer.Wpf.ViewModels.Items;
 using FlowTimer.Wpf.Views;
@@ -34,7 +34,6 @@ namespace FlowTimer.Wpf.ViewModels
         public void Cleanup()
         {
             _workItemService.WorkItemArchived -= OnWorkItemArchived;
-
             _sessionTimerService.Tick -= OnSessionTimerTick;
             _sessionTimerService.SessionStarted -= OnSessionStarted;
             _sessionTimerService.SessionStopped -= OnSessionStopped;
@@ -54,7 +53,6 @@ namespace FlowTimer.Wpf.ViewModels
             }
 
             _workItemService.WorkItemArchived += OnWorkItemArchived;
-
             _sessionTimerService.Tick += OnSessionTimerTick;
             _sessionTimerService.SessionStarted += OnSessionStarted;
             _sessionTimerService.SessionStopped += OnSessionStopped;
@@ -67,19 +65,16 @@ namespace FlowTimer.Wpf.ViewModels
         }
 
         [RelayCommand]
-        private void ArchiveWorkItem(WorkItemViewModel vm)
+        private async Task ArchiveWorkItem(WorkItemViewModel vm)
         {
             try
             {
-                var result = MessageBox.Show(
-                    $"Czy na pewno chcesz zarchiwizować zadanie '{vm.Name}'?",
-                    "Potwierdzenie",
-                    MessageBoxButton.YesNo,
-                    MessageBoxImage.Question);
+                var confirmed = await FluentMessageBox.Confirm(
+                    $"Czy na pewno chcesz zarchiwizować zadanie '{vm.Name}'?");
 
-                if (result == MessageBoxResult.Yes)
+                if (confirmed)
                 {
-                    _workItemService.Archive(vm.Id);
+                    await _workItemService.Archive(vm.Id);
                 }
             }
             catch (Exception ex)
@@ -121,23 +116,26 @@ namespace FlowTimer.Wpf.ViewModels
             var workItems = await _workItemService.GetByProjectId(_projectId);
             var vms = workItems.Select(x => new WorkItemViewModel(x));
 
-            System.Windows.Application.Current.Dispatcher.Invoke(() =>
-            {
-                WorkItems = new ObservableCollection<WorkItemViewModel>(vms);
-            });
+            WorkItems = new ObservableCollection<WorkItemViewModel>(vms);
         }
 
         private void OnSessionStarted(object? sender, SessionStartedEventArgs e)
         {
-            var workItem = WorkItems.FirstOrDefault(x => x.Id == e.WorkItemId);
-            workItem?.IsSessionActive = true;
+            System.Windows.Application.Current.Dispatcher.Invoke(() =>
+            {
+                var workItem = WorkItems.FirstOrDefault(x => x.Id == e.WorkItemId);
+                workItem?.IsSessionActive = true;
+            });
         }
 
         private void OnSessionStopped(object? sender, SessionStoppedEventArgs e)
         {
-            var workItem = WorkItems.FirstOrDefault(x => x.Id == e.WorkItemId);
-            workItem?.IsSessionActive = false;
-            workItem?.AddSessionTime(e.Duration);
+            System.Windows.Application.Current.Dispatcher.Invoke(() =>
+            {
+                var workItem = WorkItems.FirstOrDefault(x => x.Id == e.WorkItemId);
+                workItem?.IsSessionActive = false;
+                workItem?.AddSessionTime(e.Duration);
+            });
         }
 
         private void OnSessionTimerTick(object? sender, SessionTimerTickEventArgs e)
@@ -151,12 +149,15 @@ namespace FlowTimer.Wpf.ViewModels
 
         private void OnWorkItemArchived(object? sender, int e)
         {
-            var workItem = WorkItems.FirstOrDefault(x => x.Id == e);
-
-            if (workItem is not null)
+            System.Windows.Application.Current.Dispatcher.Invoke(() =>
             {
-                WorkItems.Remove(workItem);
-            }
+                var workItem = WorkItems.FirstOrDefault(x => x.Id == e);
+
+                if (workItem is not null)
+                {
+                    WorkItems.Remove(workItem);
+                }
+            });
         }
 
         [RelayCommand]
@@ -180,13 +181,20 @@ namespace FlowTimer.Wpf.ViewModels
         [RelayCommand]
         private async Task ToggleTimer(WorkItemViewModel vm)
         {
-            if (_sessionTimerService.ActiveWorkItemId == vm.Id)
+            try
             {
-                await _sessionTimerService.Stop();
+                if (_sessionTimerService.ActiveWorkItemId == vm.Id)
+                {
+                    await _sessionTimerService.Stop();
+                }
+                else
+                {
+                    await _sessionTimerService.Start(_projectId, vm.Id);
+                }
             }
-            else
+            catch (Exception ex)
             {
-                await _sessionTimerService.Start(_projectId, vm.Id);
+                _logger.LogError(ex, "Error occurred while toggling timer.");
             }
         }
     }

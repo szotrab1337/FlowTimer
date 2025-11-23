@@ -48,7 +48,7 @@ namespace FlowTimer.Application.Services
             {
                 WorkItemId = workItemId,
                 StartTime = _startTime,
-                EndTime = null,
+                EndTime = _startTime,
                 IsManual = false
             };
 

@@ -1,8 +1,8 @@
 ﻿using System.Collections.ObjectModel;
-using System.Windows;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using FlowTimer.Application.Interfaces;
+using FlowTimer.Wpf.Dialogs;
 using FlowTimer.Wpf.Navigation;
 using FlowTimer.Wpf.ViewModels.Items;
 using FlowTimer.Wpf.Views;
@@ -38,14 +38,11 @@ namespace FlowTimer.Wpf.ViewModels
             var projects = await _projectService.GetAll();
             var vms = projects.Select(x => new ProjectItemViewModel(x));
 
-            System.Windows.Application.Current.Dispatcher.Invoke(() =>
-            {
-                Projects = new ObservableCollection<ProjectItemViewModel>(vms);
-            });
+            Projects = new ObservableCollection<ProjectItemViewModel>(vms);
 
             var project = Projects.FirstOrDefault(x => x.Id == _sessionTimerService.ActiveProjectId);
             project?.IsSessionActive = true;
-            
+
             _projectService.ProjectArchived += OnProjectArchived;
             _sessionTimerService.Tick += OnSessionTimerTick;
         }
@@ -57,19 +54,16 @@ namespace FlowTimer.Wpf.ViewModels
         }
 
         [RelayCommand]
-        private void ArchiveProject(ProjectItemViewModel vm)
+        private async Task ArchiveProject(ProjectItemViewModel vm)
         {
             try
             {
-                var result = MessageBox.Show(
-                    $"Czy na pewno chcesz zarchiwizować projekt '{vm.Name}'?",
-                    "Potwierdzenie",
-                    MessageBoxButton.YesNo,
-                    MessageBoxImage.Question);
+                var result = await FluentMessageBox.Confirm(
+                    $"Czy na pewno chcesz zarchiwizować projekt '{vm.Name}'?");
 
-                if (result == MessageBoxResult.Yes)
+                if (result)
                 {
-                    _projectService.Archive(vm.Id);
+                    await _projectService.Archive(vm.Id);
                 }
             }
             catch (Exception ex)
@@ -86,12 +80,15 @@ namespace FlowTimer.Wpf.ViewModels
 
         private void OnProjectArchived(object? sender, int e)
         {
-            var project = Projects.FirstOrDefault(x => x.Id == e);
-
-            if (project is not null)
+            System.Windows.Application.Current.Dispatcher.Invoke(() =>
             {
-                Projects.Remove(project);
-            }
+                var project = Projects.FirstOrDefault(x => x.Id == e);
+
+                if (project is not null)
+                {
+                    Projects.Remove(project);
+                }
+            });
         }
 
         partial void OnSelectedProjectChanged(ProjectItemViewModel? value)
