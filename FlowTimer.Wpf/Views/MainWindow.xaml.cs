@@ -43,6 +43,8 @@ namespace FlowTimer.Wpf.Views
             StateChanged += (_, _) => UpdateMainWindowVisuals();
             Activated += (_, _) => UpdateMainWindowVisuals();
             Deactivated += (_, _) => UpdateMainWindowVisuals();
+            
+            ViewModel.Initialize();
         }
 
         public MainViewModel ViewModel { get; }
