@@ -12,10 +12,10 @@ namespace FlowTimer.Application.Services
         private readonly Timer _saveTimer = new(TimeSpan.FromSeconds(5));
         private readonly ISessionRepository _sessionRepository = sessionRepository;
         private readonly Timer _uiTimer = new(TimeSpan.FromSeconds(1));
+        private int? _activeProjectId;
 
         private Session? _activeSession;
         private int? _activeWorkItemId;
-        private int? _activeProjectId;
         private DateTime _startTime;
 
         public event EventHandler<SessionStartedEventArgs>? SessionStarted;
@@ -24,6 +24,7 @@ namespace FlowTimer.Application.Services
 
         public int? ActiveWorkItemId => _activeWorkItemId;
         public int? ActiveProjectId => _activeProjectId;
+        public int? ActiveSessionId => _activeSession?.Id;
         public bool IsRunning => _activeSession is not null;
 
         public void Dispose()

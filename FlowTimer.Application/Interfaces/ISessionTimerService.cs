@@ -9,6 +9,7 @@
         int? ActiveWorkItemId { get; }
         int? ActiveProjectId { get; }
         bool IsRunning { get; }
+        int? ActiveSessionId { get; }
 
         Task Start(int projectId, int workItemId);
         Task Stop();

@@ -31,20 +31,9 @@ namespace FlowTimer.Wpf.ViewModels.Items
         [ObservableProperty]
         private string _totalTime = string.Empty;
 
-        public ProjectItemViewModel(Project project)
+        public ProjectItemViewModel(Project project, int? activeSessionId = null)
         {
-            LoadValues(project);
-        }
-
-        public void AddSessionTime(TimeSpan duration)
-        {
-            _baseTicks += duration.Ticks;
-            UpdateTime(TimeSpan.Zero);
-        }
-
-        public void Update(Project project)
-        {
-            LoadValues(project);
+            LoadValues(project, activeSessionId);
         }
 
         public void UpdateTime(TimeSpan elapsed)
@@ -53,7 +42,7 @@ namespace FlowTimer.Wpf.ViewModels.Items
             TotalTime = $"{(int)total.TotalHours:00}:{total.Minutes:00}:{total.Seconds:00}";
         }
 
-        private void LoadValues(Project project)
+        private void LoadValues(Project project, int? activeSessionId = null)
         {
             Id = project.Id;
             Name = project.Name;
@@ -65,10 +54,12 @@ namespace FlowTimer.Wpf.ViewModels.Items
             var completedTasks = project.WorkItems.Count(x => x.IsCompleted);
             TasksProgress = $"Ukończono {completedTasks} z {totalTasks} zadań";
 
-            var duration = TimeSpan.FromTicks(project.WorkItems.Sum(x => x.Duration.Ticks));
-            TotalTime = $"{(int)duration.TotalHours:00}:{duration.Minutes:00}:{duration.Seconds:00}";
-            
-            _baseTicks = duration.Ticks;
+            _baseTicks = project.WorkItems
+                .Sum(x => x.Sessions
+                    .Where(z => z.Id != activeSessionId)
+                    .Sum(z => z.Duration.Ticks));
+
+            UpdateTime(TimeSpan.Zero);
         }
     }
 }

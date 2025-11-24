@@ -114,7 +114,7 @@ namespace FlowTimer.Wpf.ViewModels
         private async Task LoadWorkItems()
         {
             var workItems = await _workItemService.GetByProjectId(_projectId);
-            var vms = workItems.Select(x => new WorkItemViewModel(x));
+            var vms = workItems.Select(x => new WorkItemViewModel(x, _sessionTimerService.ActiveSessionId));
 
             WorkItems = new ObservableCollection<WorkItemViewModel>(vms);
         }
