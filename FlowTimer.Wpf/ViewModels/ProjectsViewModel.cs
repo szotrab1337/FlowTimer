@@ -36,7 +36,7 @@ namespace FlowTimer.Wpf.ViewModels
         public async Task Initialize()
         {
             var projects = await _projectService.GetAll();
-            var vms = projects.Select(x => new ProjectItemViewModel(x));
+            var vms = projects.Select(x => new ProjectItemViewModel(x, _sessionTimerService.ActiveSessionId));
 
             Projects = new ObservableCollection<ProjectItemViewModel>(vms);
 
