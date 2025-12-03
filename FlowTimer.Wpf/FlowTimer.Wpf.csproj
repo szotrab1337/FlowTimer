@@ -58,10 +58,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Controls\" />
-    </ItemGroup>
-
-    <ItemGroup>
       <None Remove="Assets\home-light.png" />
       <Content Include="Assets\home-light.png">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

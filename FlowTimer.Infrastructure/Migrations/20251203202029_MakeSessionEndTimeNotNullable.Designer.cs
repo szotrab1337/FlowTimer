@@ -3,6 +3,7 @@ using System;
 using FlowTimer.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FlowTimer.Infrastructure.Migrations
 {
     [DbContext(typeof(FlowTimerDbContext))]
-    partial class FlowTimerDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251203202029_MakeSessionEndTimeNotNullable")]
+    partial class MakeSessionEndTimeNotNullable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "10.0.0");

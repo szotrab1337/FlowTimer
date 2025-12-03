@@ -42,6 +42,15 @@ namespace FlowTimer.Wpf.Extensions
 
                 services.AddTransient<CompactTimerWindow>();
                 services.AddTransient<CompactTimerViewModel>();
+
+                services.AddTransient<WorkItemSessionsPage>();
+                services.AddTransient<WorkItemSessionsViewModel>();
+
+                services.AddTransient<AddSessionPage>();
+                services.AddTransient<AddSessionViewModel>();
+
+                services.AddTransient<EditSessionPage>();
+                services.AddTransient<EditSessionViewModel>();
             }
         }
     }
