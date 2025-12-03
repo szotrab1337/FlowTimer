@@ -160,7 +160,8 @@
         <ListView
             Grid.Row="4"
             Margin="0,12,0,0"
-            ItemsSource="{Binding WorkItems}">
+            ItemsSource="{Binding WorkItems}"
+            SelectedItem="{Binding SelectedWorkItem}">
             <ListView.ItemContainerStyle>
                 <Style
                     BasedOn="{StaticResource {x:Type ListViewItem}}"

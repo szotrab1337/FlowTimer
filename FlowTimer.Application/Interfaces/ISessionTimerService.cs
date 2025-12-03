@@ -15,11 +15,18 @@
         Task Stop();
     }
 
-    public class SessionTimerTickEventArgs(int projectId, int workItemId, TimeSpan elapsed)
+    public class SessionTimerTickEventArgs(
+        int projectId,
+        int workItemId,
+        int sessionId,
+        TimeSpan elapsed,
+        DateTime endTime)
     {
         public int ProjectId { get; } = projectId;
         public int WorkItemId { get; } = workItemId;
+        public int SessionId { get; } = sessionId;
         public TimeSpan Elapsed { get; } = elapsed;
+        public DateTime EndTime { get; } = endTime;
     }
 
     public class SessionStartedEventArgs(int projectId, int workItemId, int sessionId)

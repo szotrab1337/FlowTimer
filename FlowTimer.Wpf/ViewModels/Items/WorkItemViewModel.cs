@@ -34,6 +34,8 @@ namespace FlowTimer.Wpf.ViewModels.Items
         [ObservableProperty]
         private string _totalTime = string.Empty;
 
+        public WorkItem WorkItem { get; private set; } = default!;
+
         public WorkItemViewModel(WorkItem workItem, int? activeSessionId = null)
         {
             LoadValues(workItem, activeSessionId);
@@ -53,6 +55,8 @@ namespace FlowTimer.Wpf.ViewModels.Items
 
         private void LoadValues(WorkItem workItem, int? activeSessionId = null)
         {
+            WorkItem = workItem;
+
             Id = workItem.Id;
             ProjectId = workItem.ProjectId;
             Name = workItem.Name;
@@ -64,7 +68,7 @@ namespace FlowTimer.Wpf.ViewModels.Items
             _baseTicks = workItem.Sessions
                 .Where(s => s.Id != activeSessionId)
                 .Sum(x => x.Duration.Ticks);
-            
+
             UpdateTime(TimeSpan.Zero);
         }
     }

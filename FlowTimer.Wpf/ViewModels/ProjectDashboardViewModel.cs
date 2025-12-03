@@ -29,6 +29,9 @@ namespace FlowTimer.Wpf.ViewModels
         private int _projectId;
 
         [ObservableProperty]
+        private WorkItemViewModel? _selectedWorkItem;
+
+        [ObservableProperty]
         private ObservableCollection<WorkItemViewModel> _workItems = [];
 
         public void Cleanup()
@@ -117,6 +120,16 @@ namespace FlowTimer.Wpf.ViewModels
             var vms = workItems.Select(x => new WorkItemViewModel(x, _sessionTimerService.ActiveSessionId));
 
             WorkItems = new ObservableCollection<WorkItemViewModel>(vms);
+        }
+
+        partial void OnSelectedWorkItemChanged(WorkItemViewModel? value)
+        {
+            if (value is null)
+            {
+                return;
+            }
+
+            _navigationService.Navigate(typeof(WorkItemSessionsPage), value.WorkItem);
         }
 
         private void OnSessionStarted(object? sender, SessionStartedEventArgs e)

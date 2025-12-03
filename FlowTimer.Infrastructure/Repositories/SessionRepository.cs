@@ -49,6 +49,7 @@ namespace FlowTimer.Infrastructure.Repositories
 
             return await context.Sessions
                 .Where(x => x.WorkItemId == workItemId && !x.IsArchived)
+                .OrderByDescending(x => x.StartTime)
                 .ToListAsync();
         }
 

@@ -105,13 +105,22 @@ namespace FlowTimer.Application.Services
 
         private void OnUiTimerElapsed(object? sender, ElapsedEventArgs e)
         {
-            if (_activeWorkItemId is null || _activeProjectId is null)
+            if (_activeWorkItemId is null || _activeProjectId is null || _activeSession is null)
             {
                 return;
             }
 
-            var elapsed = DateTime.Now - _startTime;
-            Tick?.Invoke(this, new SessionTimerTickEventArgs(_activeProjectId.Value, _activeWorkItemId.Value, elapsed));
+            var now = DateTime.Now;
+            
+            var elapsed = now - _startTime;
+            _activeSession.EndTime = now;
+
+            Tick?.Invoke(this, new SessionTimerTickEventArgs(
+                _activeProjectId.Value,
+                _activeWorkItemId.Value,
+                _activeSession.Id,
+                elapsed,
+                _activeSession.EndTime));
         }
     }
 }
