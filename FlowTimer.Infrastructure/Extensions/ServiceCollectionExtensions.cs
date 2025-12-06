@@ -15,8 +15,12 @@ namespace FlowTimer.Infrastructure.Extensions
         {
             public void AddInfrastructure(IConfiguration configuration)
             {
+                var connectionStringTemplate = configuration.GetConnectionString("FlowTimerDb");
+                var appData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+                var connectionString = connectionStringTemplate!.Replace("{AppData}", appData);
+
                 services.AddDbContextFactory<FlowTimerDbContext>(
-                    options => { options.UseSqlite(configuration.GetConnectionString("FlowTimerDb")); },
+                    options => { options.UseSqlite(connectionString); },
                     ServiceLifetime.Transient);
 
                 services.AddScoped<IProjectRepository, ProjectRepository>();
