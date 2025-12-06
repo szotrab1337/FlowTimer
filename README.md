@@ -6,7 +6,7 @@
 A modern desktop application for time tracking and productivity management built with WPF and Clean Architecture
 principles.
 
-![Application Screenshot](screenshots/main-window.png)
+![Application](https://github.com/user-attachments/assets/a9ed8758-3aec-4f4a-8da3-c69ef25d79a1)
 
 ## 📋 Table of Contents
 
@@ -110,6 +110,13 @@ On the first run, the application will:
 - Set up the default configuration
 
 ## 📸 Screenshots
+
+![Projects](https://github.com/user-attachments/assets/d8da7e2d-8967-43f9-91a9-022cf0e82eed)
+![Project tasks with active session](https://github.com/user-attachments/assets/c31e5c06-45cd-4198-8dae-6633c5b1e103)
+![Task sessions list](https://github.com/user-attachments/assets/660cb84f-4553-42e2-a7ef-90d17a9e553b)
+![Always on top compact window](https://github.com/user-attachments/assets/ff42f576-2ac8-4ac3-984c-5413446aa9b4)
+![Settings](https://github.com/user-attachments/assets/e25ef0ca-4914-4535-81cd-302d0abde865)
+
 
 ## 📝 Roadmap
 
