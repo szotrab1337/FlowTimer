@@ -10,13 +10,14 @@ principles.
 
 ## 📋 Table of Contents
 
-- [Overview](#overview)
-- [Features](#features)
-- [Architecture](#architecture)
-- [Technologies](#technologies)
-- [Getting Started](#getting-started)
-- [Screenshots](#screenshots)
-- [License](#license)
+- [Overview](#-overview)
+- [Features](#-features)
+- [Architecture](#%EF%B8%8F-architecture)
+- [Technologies](#%EF%B8%8F-technologies)
+- [Getting Started](#-getting-started)
+- [Screenshots](#-screenshots)
+- [Roadmap](#-roadmap)
+- [License](#-license)
 
 ## 🎯 Overview
 
@@ -82,7 +83,7 @@ FlowTimer/
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/yourusername/FlowTimer.git
+   git clone https://github.com/szotrab1337/FlowTimer.git
    cd FlowTimer
    ```
 
